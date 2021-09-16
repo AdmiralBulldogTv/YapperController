@@ -1,0 +1,42 @@
+level: info
+
+tts_channel_id: 
+
+redis_uri: redis://localhost/0
+redis_task_set_key: tasks
+redis_output_event: output
+
+mongo_uri: mongodb://localhost
+mongo_db: tts
+
+stream_elements_enabled: true
+stream_elements_wss_url: wss://realtime.streamelements.com/socket.io/?cluster=main&EIO=3&transport=websocket
+stream_elements_auth_method: jwt
+stream_elements_auth_token: 
+
+api_bind: 0.0.0.0:8888
+
+cors: http://localhost:3000
+
+twitch_client_id: 
+twitch_client_secret: 
+twitch_redirect_uri: http://localhost:8888/v1/twitch/callback
+
+cookie_domain: localhost
+cookie_secure: false
+
+jwt_secret: kappa123
+
+twitch_bot_username: komodotroy
+twitch_bot_id: 614822347
+twitch_bot_control_channel: troydota
+
+whitelisted_twitch_accounts:
+  - 121903137
+  - 614822347
+  - 133955304
+  - 30816637
+  - 45636332
+
+frontend_domain: http://localhost:3000/admin
+
