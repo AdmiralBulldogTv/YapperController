@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/troydota/tts-textparser/src/instances"
+	"github.com/admiralbulldogtv/yappercontroller/src/instances"
 )
 
 type Context interface {

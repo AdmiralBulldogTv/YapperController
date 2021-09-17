@@ -9,6 +9,12 @@ import (
 	"sync"
 	"time"
 
+	"github.com/admiralbulldogtv/yappercontroller/src/datastructures"
+	"github.com/admiralbulldogtv/yappercontroller/src/global"
+	"github.com/admiralbulldogtv/yappercontroller/src/instances"
+	"github.com/admiralbulldogtv/yappercontroller/src/textparser"
+	"github.com/admiralbulldogtv/yappercontroller/src/textparser/parts"
+	"github.com/admiralbulldogtv/yappercontroller/src/utils"
 	"github.com/go-audio/audio"
 	"github.com/go-audio/wav"
 	"github.com/gobuffalo/packr/v2"
@@ -16,12 +22,6 @@ import (
 	jsoniter "github.com/json-iterator/go"
 	"github.com/orcaman/writerseeker"
 	"github.com/sirupsen/logrus"
-	"github.com/troydota/tts-textparser/src/datastructures"
-	"github.com/troydota/tts-textparser/src/global"
-	"github.com/troydota/tts-textparser/src/instances"
-	"github.com/troydota/tts-textparser/src/textparser"
-	"github.com/troydota/tts-textparser/src/textparser/parts"
-	"github.com/troydota/tts-textparser/src/utils"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 

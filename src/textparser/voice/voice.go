@@ -3,7 +3,7 @@ package voice
 import (
 	"strings"
 
-	"github.com/troydota/tts-textparser/src/textparser/parts"
+	"github.com/admiralbulldogtv/yappercontroller/src/textparser/parts"
 )
 
 func NormalizeVoices(pts []parts.VoicePart, currentVoice parts.Voice, validVoices []parts.Voice) []parts.VoicePart {

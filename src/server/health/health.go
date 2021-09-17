@@ -5,8 +5,8 @@ import (
 	"sync"
 	"time"
 
+	"github.com/admiralbulldogtv/yappercontroller/src/global"
 	"github.com/gofiber/fiber/v2"
-	"github.com/troydota/tts-textparser/src/global"
 
 	log "github.com/sirupsen/logrus"
 )

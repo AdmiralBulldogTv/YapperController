@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/admiralbulldogtv/yappercontroller/src/utils"
 	"github.com/dgrijalva/jwt-go"
 	jsoniter "github.com/json-iterator/go"
-	"github.com/troydota/tts-textparser/src/utils"
 )
 
 var json = jsoniter.ConfigCompatibleWithStandardLibrary

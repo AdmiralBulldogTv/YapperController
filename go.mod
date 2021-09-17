@@ -1,4 +1,4 @@
-module github.com/troydota/tts-textparser
+module github.com/admiralbulldogtv/yappercontroller
 
 go 1.17
 

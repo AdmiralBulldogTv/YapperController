@@ -1,9 +1,9 @@
 package v1
 
 import (
+	"github.com/admiralbulldogtv/yappercontroller/src/global"
 	"github.com/gofiber/fiber/v2"
 	jsoniter "github.com/json-iterator/go"
-	"github.com/troydota/tts-textparser/src/global"
 )
 
 var json = jsoniter.ConfigCompatibleWithStandardLibrary

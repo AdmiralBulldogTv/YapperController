@@ -4,7 +4,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/troydota/tts-textparser/src/textparser/parts"
+	"github.com/admiralbulldogtv/yappercontroller/src/textparser/parts"
 )
 
 var re = regexp.MustCompile(`\s*([.,]+)\s*`)

@@ -1,7 +1,7 @@
 package global
 
 import (
-	"github.com/troydota/tts-textparser/src/instances"
+	"github.com/admiralbulldogtv/yappercontroller/src/instances"
 )
 
 type ServerCfg struct {

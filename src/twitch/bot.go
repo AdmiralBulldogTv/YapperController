@@ -8,12 +8,12 @@ import (
 	"strings"
 	"time"
 
+	"github.com/admiralbulldogtv/yappercontroller/src/global"
 	"github.com/gempir/go-twitch-irc/v2"
 	"github.com/go-redis/redis/v8"
 	"github.com/hashicorp/go-multierror"
 	jsoniter "github.com/json-iterator/go"
 	"github.com/sirupsen/logrus"
-	"github.com/troydota/tts-textparser/src/global"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 

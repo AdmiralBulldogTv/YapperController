@@ -6,9 +6,9 @@ import (
 	"encoding/json"
 	"strings"
 
+	"github.com/admiralbulldogtv/yappercontroller/src/global"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
-	"github.com/troydota/tts-textparser/src/global"
 )
 
 // default config

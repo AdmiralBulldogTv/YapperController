@@ -4,13 +4,13 @@ import (
 	"strings"
 	"time"
 
+	"github.com/admiralbulldogtv/yappercontroller/src/global"
+	"github.com/admiralbulldogtv/yappercontroller/src/server/health"
+	"github.com/admiralbulldogtv/yappercontroller/src/server/middleware"
+	v1 "github.com/admiralbulldogtv/yappercontroller/src/server/v1"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/sirupsen/logrus"
-	"github.com/troydota/tts-textparser/src/global"
-	"github.com/troydota/tts-textparser/src/server/health"
-	"github.com/troydota/tts-textparser/src/server/middleware"
-	v1 "github.com/troydota/tts-textparser/src/server/v1"
 )
 
 func New(ctx global.Context) <-chan struct{} {

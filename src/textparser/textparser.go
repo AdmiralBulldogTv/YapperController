@@ -4,15 +4,15 @@ import (
 	"context"
 	"strings"
 
-	"github.com/troydota/tts-textparser/src/global"
-	"github.com/troydota/tts-textparser/src/textparser/currency"
-	"github.com/troydota/tts-textparser/src/textparser/numbers"
-	"github.com/troydota/tts-textparser/src/textparser/override"
-	"github.com/troydota/tts-textparser/src/textparser/parts"
-	"github.com/troydota/tts-textparser/src/textparser/sentance"
-	"github.com/troydota/tts-textparser/src/textparser/strip"
-	"github.com/troydota/tts-textparser/src/textparser/voice"
-	"github.com/troydota/tts-textparser/src/textparser/words"
+	"github.com/admiralbulldogtv/yappercontroller/src/global"
+	"github.com/admiralbulldogtv/yappercontroller/src/textparser/currency"
+	"github.com/admiralbulldogtv/yappercontroller/src/textparser/numbers"
+	"github.com/admiralbulldogtv/yappercontroller/src/textparser/override"
+	"github.com/admiralbulldogtv/yappercontroller/src/textparser/parts"
+	"github.com/admiralbulldogtv/yappercontroller/src/textparser/sentance"
+	"github.com/admiralbulldogtv/yappercontroller/src/textparser/strip"
+	"github.com/admiralbulldogtv/yappercontroller/src/textparser/voice"
+	"github.com/admiralbulldogtv/yappercontroller/src/textparser/words"
 )
 
 func Process(gCtx global.Context, ctx context.Context, text string) ([]parts.VoicePart, error) {

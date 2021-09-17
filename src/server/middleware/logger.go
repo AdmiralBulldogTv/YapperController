@@ -3,9 +3,9 @@ package middleware
 import (
 	"time"
 
+	"github.com/admiralbulldogtv/yappercontroller/src/utils"
 	"github.com/gofiber/fiber/v2"
 	log "github.com/sirupsen/logrus"
-	"github.com/troydota/tts-textparser/src/utils"
 )
 
 func Logger() func(c *fiber.Ctx) error {

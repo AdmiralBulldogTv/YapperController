@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"strconv"
 
+	"github.com/admiralbulldogtv/yappercontroller/src/global"
+	"github.com/admiralbulldogtv/yappercontroller/src/utils"
 	"github.com/go-redis/redis/v8"
 	"github.com/gofiber/fiber/v2"
 	"github.com/sirupsen/logrus"
-	"github.com/troydota/tts-textparser/src/global"
-	"github.com/troydota/tts-textparser/src/utils"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 

@@ -3,7 +3,7 @@ package strip
 import (
 	"regexp"
 
-	"github.com/troydota/tts-textparser/src/textparser/parts"
+	"github.com/admiralbulldogtv/yappercontroller/src/textparser/parts"
 )
 
 var re = regexp.MustCompile(`[^a-z |]`)

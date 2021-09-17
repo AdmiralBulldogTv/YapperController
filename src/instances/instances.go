@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/troydota/tts-textparser/src/datastructures"
+	"github.com/admiralbulldogtv/yappercontroller/src/datastructures"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 

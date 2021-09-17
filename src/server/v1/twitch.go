@@ -9,12 +9,12 @@ import (
 	"strings"
 	"time"
 
+	"github.com/admiralbulldogtv/yappercontroller/src/global"
+	"github.com/admiralbulldogtv/yappercontroller/src/jwt"
+	"github.com/admiralbulldogtv/yappercontroller/src/twitch"
+	"github.com/admiralbulldogtv/yappercontroller/src/utils"
 	"github.com/gofiber/fiber/v2"
 	"github.com/sirupsen/logrus"
-	"github.com/troydota/tts-textparser/src/global"
-	"github.com/troydota/tts-textparser/src/jwt"
-	"github.com/troydota/tts-textparser/src/twitch"
-	"github.com/troydota/tts-textparser/src/utils"
 )
 
 type TwitchUserResp struct {

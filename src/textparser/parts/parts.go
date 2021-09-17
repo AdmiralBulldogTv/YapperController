@@ -1,6 +1,6 @@
 package parts
 
-import "github.com/troydota/tts-textparser/src/datastructures"
+import "github.com/admiralbulldogtv/yappercontroller/src/datastructures"
 
 type PartType int
 

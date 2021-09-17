@@ -3,13 +3,13 @@ package main
 import (
 	"context"
 
+	"github.com/admiralbulldogtv/yappercontroller/src/configure"
+	"github.com/admiralbulldogtv/yappercontroller/src/global"
+	"github.com/admiralbulldogtv/yappercontroller/src/manager"
+	"github.com/admiralbulldogtv/yappercontroller/src/mongo"
+	"github.com/admiralbulldogtv/yappercontroller/src/redis"
+	"github.com/admiralbulldogtv/yappercontroller/src/tts"
 	"github.com/sirupsen/logrus"
-	"github.com/troydota/tts-textparser/src/configure"
-	"github.com/troydota/tts-textparser/src/global"
-	"github.com/troydota/tts-textparser/src/manager"
-	"github.com/troydota/tts-textparser/src/mongo"
-	"github.com/troydota/tts-textparser/src/redis"
-	"github.com/troydota/tts-textparser/src/tts"
 )
 
 func main() {

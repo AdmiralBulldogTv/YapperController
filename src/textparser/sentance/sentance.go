@@ -5,8 +5,8 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/admiralbulldogtv/yappercontroller/src/textparser/parts"
 	"github.com/jdkato/prose/v2"
-	"github.com/troydota/tts-textparser/src/textparser/parts"
 )
 
 var reSpace = regexp.MustCompile(`\s|-`)

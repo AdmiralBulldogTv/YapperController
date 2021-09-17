@@ -5,9 +5,9 @@ import (
 	"sync"
 	"time"
 
+	"github.com/admiralbulldogtv/yappercontroller/src/instances"
 	"github.com/go-redis/redis/v8"
 	"github.com/sirupsen/logrus"
-	"github.com/troydota/tts-textparser/src/instances"
 )
 
 type redisInstance struct {

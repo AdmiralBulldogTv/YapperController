@@ -6,12 +6,12 @@ import (
 	"strings"
 	"time"
 
+	"github.com/admiralbulldogtv/yappercontroller/src/global"
+	"github.com/admiralbulldogtv/yappercontroller/src/server"
+	"github.com/admiralbulldogtv/yappercontroller/src/streamelements"
+	"github.com/admiralbulldogtv/yappercontroller/src/twitch"
 	jsoniter "github.com/json-iterator/go"
 	"github.com/sirupsen/logrus"
-	"github.com/troydota/tts-textparser/src/global"
-	"github.com/troydota/tts-textparser/src/server"
-	"github.com/troydota/tts-textparser/src/streamelements"
-	"github.com/troydota/tts-textparser/src/twitch"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 

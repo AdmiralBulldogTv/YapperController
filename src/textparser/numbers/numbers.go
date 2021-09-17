@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/troydota/tts-textparser/src/textparser/parts"
+	"github.com/admiralbulldogtv/yappercontroller/src/textparser/parts"
 )
 
 var re = regexp.MustCompile(`([-+])?(\d+(?:\s*,?\s*\d{3})*)(?:\.(\d+))?`)

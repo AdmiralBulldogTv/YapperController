@@ -3,8 +3,8 @@ package mongo
 import (
 	"context"
 
-	"github.com/troydota/tts-textparser/src/datastructures"
-	"github.com/troydota/tts-textparser/src/instances"
+	"github.com/admiralbulldogtv/yappercontroller/src/datastructures"
+	"github.com/admiralbulldogtv/yappercontroller/src/instances"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"

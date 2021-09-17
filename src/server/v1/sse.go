@@ -6,9 +6,9 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/admiralbulldogtv/yappercontroller/src/global"
 	"github.com/gofiber/fiber/v2"
 	"github.com/sirupsen/logrus"
-	"github.com/troydota/tts-textparser/src/global"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
