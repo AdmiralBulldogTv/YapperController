@@ -278,6 +278,13 @@ func (inst *ttsInstance) SendRequest(ctx context.Context, text string) ([]byte, 
 
 	close(cb)
 
+	// adding about 1 seconds on to each audio file.
+	for i := 0; i < 5; i++ {
+		if err = encoder.Write(longPause); err != nil {
+			return nil, err
+		}
+	}
+
 	for i := 0; i < len(idxMap); i++ {
 		resp := idxMap[i]
 		if resp.Voice.Type == parts.VoicePartTypeReader {
@@ -292,9 +299,9 @@ func (inst *ttsInstance) SendRequest(ctx context.Context, text string) ([]byte, 
 		case parts.SpaceTypeLongPause:
 			arr = longPause
 		case parts.SpaceTypeMediumPause:
-			arr = shortPause
+			arr = mediumPause
 		case parts.SpaceTypeShortPause:
-			// arr = shortPause
+			arr = shortPause
 		default:
 			logrus.Warnf("unknown pause %d", resp.IdxMap[i])
 			continue
@@ -306,8 +313,11 @@ func (inst *ttsInstance) SendRequest(ctx context.Context, text string) ([]byte, 
 		}
 	}
 
-	if err = encoder.Write(longPause); err != nil {
-		return nil, err
+	// adding about 1 seconds on to each audio file.
+	for i := 0; i < 5; i++ {
+		if err = encoder.Write(longPause); err != nil {
+			return nil, err
+		}
 	}
 
 	if err := encoder.Close(); err != nil {
