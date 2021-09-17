@@ -91,49 +91,25 @@ type respHelper struct {
 }
 
 var (
-	longPause   *audio.IntBuffer
-	mediumPause *audio.IntBuffer
-	shortPause  *audio.IntBuffer
+	soundMap = map[string]*audio.IntBuffer{}
 )
 
 func init() {
-	var err error
 	box := packr.New("tts-assets", "./assets/")
-	lp, err := box.Find("long-pause.wav")
-	if err != nil {
-		panic(err)
-	}
-	mp, err := box.Find("medium-pause.wav")
-	if err != nil {
-		panic(err)
-	}
-	sp, err := box.Find("short-pause.wav")
-	if err != nil {
-		panic(err)
-	}
-	decoder := wav.NewDecoder(bytes.NewReader(lp))
-	if !decoder.IsValidFile() {
-		panic("bad file")
-	}
-	longPause, err = decoder.FullPCMBuffer()
-	if err != nil {
-		panic(err)
-	}
-	decoder = wav.NewDecoder(bytes.NewReader(mp))
-	if !decoder.IsValidFile() {
-		panic("bad file")
-	}
-	mediumPause, err = decoder.FullPCMBuffer()
-	if err != nil {
-		panic(err)
-	}
-	decoder = wav.NewDecoder(bytes.NewReader(sp))
-	if !decoder.IsValidFile() {
-		panic("bad file")
-	}
-	shortPause, err = decoder.FullPCMBuffer()
-	if err != nil {
-		panic(err)
+	files := []string{"long-pause.wav", "medium-pause.wav", "short-pause.wav"}
+	for _, v := range files {
+		sp, err := box.Find(v)
+		if err != nil {
+			panic(err)
+		}
+		decoder := wav.NewDecoder(bytes.NewReader(sp))
+		if !decoder.IsValidFile() {
+			panic("bad file")
+		}
+		soundMap[v], err = decoder.FullPCMBuffer()
+		if err != nil {
+			panic(err)
+		}
 	}
 }
 
@@ -280,7 +256,7 @@ func (inst *ttsInstance) SendRequest(ctx context.Context, text string) ([]byte, 
 
 	// adding about 1 seconds on to each audio file.
 	for i := 0; i < 5; i++ {
-		if err = encoder.Write(longPause); err != nil {
+		if err = encoder.Write(soundMap["long-pause.wav"]); err != nil {
 			return nil, err
 		}
 	}
@@ -291,17 +267,18 @@ func (inst *ttsInstance) SendRequest(ctx context.Context, text string) ([]byte, 
 			if err := encoder.Write(resp.wav); err != nil {
 				return nil, err
 			}
-		} else {
-			// todo add sound bytes.
 		}
+		// else {
+		// 	// todo add sound bytes.
+		// }
 		var arr *audio.IntBuffer
 		switch resp.IdxMap[i] {
 		case parts.SpaceTypeLongPause:
-			arr = longPause
+			arr = soundMap["long-pause.wav"]
 		case parts.SpaceTypeMediumPause:
-			arr = mediumPause
+			arr = soundMap["medium-pause.wav"]
 		case parts.SpaceTypeShortPause:
-			arr = shortPause
+			arr = soundMap["short-pause.wav"]
 		default:
 			logrus.Warnf("unknown pause %d", resp.IdxMap[i])
 			continue
@@ -315,7 +292,7 @@ func (inst *ttsInstance) SendRequest(ctx context.Context, text string) ([]byte, 
 
 	// adding about 1 seconds on to each audio file.
 	for i := 0; i < 5; i++ {
-		if err = encoder.Write(longPause); err != nil {
+		if err = encoder.Write(soundMap["long-pause.wav"]); err != nil {
 			return nil, err
 		}
 	}
