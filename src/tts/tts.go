@@ -254,13 +254,6 @@ func (inst *ttsInstance) SendRequest(ctx context.Context, text string) ([]byte, 
 
 	close(cb)
 
-	// adding about 1 seconds on to each audio file.
-	for i := 0; i < 5; i++ {
-		if err = encoder.Write(soundMap["long-pause.wav"]); err != nil {
-			return nil, err
-		}
-	}
-
 	for i := 0; i < len(idxMap); i++ {
 		resp := idxMap[i]
 		if resp.Voice.Type == parts.VoicePartTypeReader {
@@ -291,7 +284,7 @@ func (inst *ttsInstance) SendRequest(ctx context.Context, text string) ([]byte, 
 	}
 
 	// adding about 1 seconds on to each audio file.
-	for i := 0; i < 5; i++ {
+	for i := 0; i < 20; i++ {
 		if err = encoder.Write(soundMap["long-pause.wav"]); err != nil {
 			return nil, err
 		}
