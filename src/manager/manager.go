@@ -128,6 +128,9 @@ func (m *Manager) handleSe(gCtx global.Context) error {
 					message = bitsRe.ReplaceAllString(message, "")
 
 					amount := data.Amount / 100
+					if amount < 3 {
+						continue event
+					}
 
 					defaultVoice = textparser.VoicesMap["bull"]
 
@@ -166,6 +169,10 @@ func (m *Manager) handleSe(gCtx global.Context) error {
 						textparser.VoicesMap["arno"],
 						textparser.VoicesMap["krab"],
 					)
+
+					if data.Amount < 3 {
+						continue event
+					}
 
 					if data.Amount >= 6 {
 						validVoices = append(validVoices,
