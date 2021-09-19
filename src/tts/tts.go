@@ -5,7 +5,6 @@ import (
 	"context"
 	"encoding/base64"
 	"fmt"
-	"io/ioutil"
 	"sync"
 	"time"
 
@@ -20,7 +19,7 @@ import (
 	"github.com/gobuffalo/packr/v2"
 	"github.com/google/uuid"
 	jsoniter "github.com/json-iterator/go"
-	"github.com/orcaman/writerseeker"
+	"github.com/mattetti/filebuffer"
 	"github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
@@ -159,8 +158,8 @@ func (inst *ttsInstance) SendRequest(ctx context.Context, text string, currentVo
 	results := map[string]*respHelper{}
 	idxMap := map[int]*respHelper{}
 
-	buf := &writerseeker.WriterSeeker{}
-	buf.Reader()
+	// 4mb initial buffer.
+	buf := filebuffer.New(make([]byte, 1<<12))
 
 	var encoder *wav.Encoder
 
@@ -294,11 +293,9 @@ func (inst *ttsInstance) SendRequest(ctx context.Context, text string, currentVo
 		return nil, err
 	}
 
-	if err := buf.Close(); err != nil {
-		return nil, err
-	}
+	_, _ = buf.Seek(0, 0)
 
-	return ioutil.ReadAll(buf.Reader())
+	return buf.Bytes(), nil
 }
 
 func (inst *ttsInstance) Generate(ctx context.Context, text string, id primitive.ObjectID, channelID primitive.ObjectID, currentVoice parts.Voice, validVoices []parts.Voice, maxVoiceSwaps int) ([]byte, error) {

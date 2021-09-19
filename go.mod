@@ -35,7 +35,6 @@ require (
 	github.com/go-audio/wav v1.0.0
 	github.com/gorilla/websocket v1.4.2
 	github.com/klauspost/compress v1.13.4 // indirect
-	github.com/orcaman/writerseeker v0.0.0-20200621085525-1d3f536ff85e
 	github.com/sirupsen/logrus v1.8.1
 	github.com/spf13/viper v1.8.1
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
@@ -79,6 +78,7 @@ require (
 require (
 	github.com/gobuffalo/packr/v2 v2.8.1
 	github.com/hashicorp/errwrap v1.0.0 // indirect
+	github.com/mattetti/filebuffer v1.0.1
 )
 
 require (
