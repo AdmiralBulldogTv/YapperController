@@ -147,8 +147,8 @@ func (inst *ttsInstance) process() {
 	}
 }
 
-func (inst *ttsInstance) SendRequest(ctx context.Context, text string) ([]byte, error) {
-	_pts, err := textparser.Process(inst.gCtx, ctx, text)
+func (inst *ttsInstance) SendRequest(ctx context.Context, text string, currentVoice parts.Voice, validVoices []parts.Voice) ([]byte, error) {
+	_pts, err := textparser.Process(text, currentVoice, validVoices)
 	if err != nil {
 		return nil, err
 	}
@@ -284,7 +284,7 @@ func (inst *ttsInstance) SendRequest(ctx context.Context, text string) ([]byte, 
 	}
 
 	// adding about 1 seconds on to each audio file.
-	for i := 0; i < 20; i++ {
+	for i := 0; i < 8; i++ {
 		if err = encoder.Write(soundMap["long-pause.wav"]); err != nil {
 			return nil, err
 		}
@@ -301,13 +301,13 @@ func (inst *ttsInstance) SendRequest(ctx context.Context, text string) ([]byte, 
 	return ioutil.ReadAll(buf.Reader())
 }
 
-func (inst *ttsInstance) Generate(ctx context.Context, text string, id primitive.ObjectID, channelID primitive.ObjectID) ([]byte, error) {
-	data, err := inst.SendRequest(ctx, text)
+func (inst *ttsInstance) Generate(ctx context.Context, text string, id primitive.ObjectID, channelID primitive.ObjectID, currentVoice parts.Voice, validVoices []parts.Voice) ([]byte, error) {
+	data, err := inst.SendRequest(ctx, text, currentVoice, validVoices)
 	if err != nil {
 		return data, err
 	}
 
-	if err := inst.gCtx.GetRedisInstance().Set(ctx, fmt.Sprintf("generated:tts:%s", id.Hex()), utils.B2S(data), time.Minute); err != nil {
+	if err := inst.gCtx.GetRedisInstance().Set(ctx, fmt.Sprintf("generated:tts:%s", id.Hex()), utils.B2S(data), time.Hour); err != nil {
 		return nil, err
 	}
 

@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/admiralbulldogtv/yappercontroller/src/global"
+	"github.com/admiralbulldogtv/yappercontroller/src/textparser"
 	"github.com/gempir/go-twitch-irc/v2"
 	"github.com/go-redis/redis/v8"
 	"github.com/hashicorp/go-multierror"
@@ -95,7 +96,7 @@ func NewClient(ctx global.Context) (Client, error) {
 		channelID, _ := primitive.ObjectIDFromHex(ctx.Config().TtsChannelID)
 		if strings.HasPrefix(msg, "!say ") {
 			msg = strings.TrimPrefix(msg, "!say ")
-			_, err := ctx.GetTtsInstance().Generate(ctx, msg, primitive.NewObjectIDFromTimestamp(time.Now()), channelID)
+			_, err := ctx.GetTtsInstance().Generate(ctx, msg, primitive.NewObjectIDFromTimestamp(time.Now()), channelID, textparser.Voices[0], textparser.Voices)
 			if err != nil {
 				err = multierror.Append(err, client.SendWhisper(message.User.Name, "failed to generate tts"))
 				logrus.WithError(err).Error("failed to generate tts")
@@ -129,7 +130,7 @@ func NewClient(ctx global.Context) (Client, error) {
 		channelID, _ := primitive.ObjectIDFromHex(ctx.Config().TtsChannelID)
 		if strings.HasPrefix(msg, "!say ") {
 			msg = strings.TrimPrefix(msg, "!say ")
-			_, err := ctx.GetTtsInstance().Generate(ctx, msg, primitive.NewObjectIDFromTimestamp(time.Now()), channelID)
+			_, err := ctx.GetTtsInstance().Generate(ctx, msg, primitive.NewObjectIDFromTimestamp(time.Now()), channelID, textparser.Voices[0], textparser.Voices)
 			if err != nil {
 				err = multierror.Append(err, client.SendMessage(message.Channel, fmt.Sprintf("@%s, failed to generate tts", message.User.DisplayName)))
 				logrus.WithError(err).Error("failed to generate tts")

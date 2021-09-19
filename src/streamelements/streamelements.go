@@ -28,17 +28,21 @@ type Client interface {
 	Events() <-chan Event
 }
 
-type EventPayload struct {
+type EventUpdatePayload struct {
+	Name string              `json:"name"`
+	Data jsoniter.RawMessage `json:"data"`
+}
+
+type EventTestPayload struct {
 	Listener string              `json:"listener"`
 	Event    jsoniter.RawMessage `json:"event"`
 }
 
 type Subscription struct {
-	DisplayName string `json:"displayName"`
-	Amount      int    `json:"amount"`
-	Tier        string `json:"tier"`
-	Name        string `json:"name"`
-	Message     string `json:"message"`
+	Name    string `json:"name"`
+	Amount  int    `json:"amount"`
+	Tier    string `json:"tier"`
+	Message string `json:"message"`
 }
 
 type Cheer struct {
@@ -49,10 +53,9 @@ type Cheer struct {
 }
 
 type Donation struct {
-	Amount   float64 `json:"amount"`
-	Currency string  `json:"currency"`
-	Message  string  `json:"message"`
-	Name     string  `json:"name"`
+	Name    string  `json:"name"`
+	Amount  float64 `json:"amount"`
+	Message string  `json:"message"`
 }
 
 type Event struct {
