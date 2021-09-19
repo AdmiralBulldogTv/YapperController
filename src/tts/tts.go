@@ -257,7 +257,7 @@ func (inst *ttsInstance) SendRequest(ctx context.Context, text string, currentVo
 	for i := 0; i < len(idxMap); i++ {
 		resp := idxMap[i]
 		if resp.Voice.Type == parts.VoicePartTypeReader {
-			if err := encoder.Write(resp.wav); err != nil {
+			if err := encoder.Write(resp.wav.Clone().AsIntBuffer()); err != nil {
 				return nil, err
 			}
 		}
@@ -267,11 +267,11 @@ func (inst *ttsInstance) SendRequest(ctx context.Context, text string, currentVo
 		var arr *audio.IntBuffer
 		switch resp.IdxMap[i] {
 		case parts.SpaceTypeLongPause:
-			arr = soundMap["long-pause.wav"]
+			arr = soundMap["medium-pause.wav"].Clone().AsIntBuffer()
 		case parts.SpaceTypeMediumPause:
-			arr = soundMap["medium-pause.wav"]
+			arr = soundMap["short-pause.wav"].Clone().AsIntBuffer()
 		case parts.SpaceTypeShortPause:
-			arr = soundMap["short-pause.wav"]
+			// arr = soundMap["short-pause.wav"].Clone().AsIntBuffer()
 		default:
 			logrus.Warnf("unknown pause %d", resp.IdxMap[i])
 			continue
@@ -284,8 +284,8 @@ func (inst *ttsInstance) SendRequest(ctx context.Context, text string, currentVo
 	}
 
 	// adding about 1 seconds on to each audio file.
-	for i := 0; i < 8; i++ {
-		if err = encoder.Write(soundMap["long-pause.wav"]); err != nil {
+	for i := 0; i < 5; i++ {
+		if err = encoder.Write(soundMap["long-pause.wav"].Clone().AsIntBuffer()); err != nil {
 			return nil, err
 		}
 	}
