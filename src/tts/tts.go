@@ -147,8 +147,8 @@ func (inst *ttsInstance) process() {
 	}
 }
 
-func (inst *ttsInstance) SendRequest(ctx context.Context, text string, currentVoice parts.Voice, validVoices []parts.Voice) ([]byte, error) {
-	_pts, err := textparser.Process(text, currentVoice, validVoices)
+func (inst *ttsInstance) SendRequest(ctx context.Context, text string, currentVoice parts.Voice, validVoices []parts.Voice, maxVoiceSwaps int) ([]byte, error) {
+	_pts, err := textparser.Process(text, currentVoice, validVoices, maxVoiceSwaps)
 	if err != nil {
 		return nil, err
 	}
@@ -301,8 +301,8 @@ func (inst *ttsInstance) SendRequest(ctx context.Context, text string, currentVo
 	return ioutil.ReadAll(buf.Reader())
 }
 
-func (inst *ttsInstance) Generate(ctx context.Context, text string, id primitive.ObjectID, channelID primitive.ObjectID, currentVoice parts.Voice, validVoices []parts.Voice) ([]byte, error) {
-	data, err := inst.SendRequest(ctx, text, currentVoice, validVoices)
+func (inst *ttsInstance) Generate(ctx context.Context, text string, id primitive.ObjectID, channelID primitive.ObjectID, currentVoice parts.Voice, validVoices []parts.Voice, maxVoiceSwaps int) ([]byte, error) {
+	data, err := inst.SendRequest(ctx, text, currentVoice, validVoices, maxVoiceSwaps)
 	if err != nil {
 		return data, err
 	}

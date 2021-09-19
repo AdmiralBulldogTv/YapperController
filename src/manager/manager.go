@@ -249,7 +249,7 @@ func (m *Manager) handleSe(gCtx global.Context) error {
 				if message != "" {
 					go func() {
 						channelId, _ := primitive.ObjectIDFromHex(gCtx.Config().TtsChannelID)
-						_, err := gCtx.GetTtsInstance().Generate(gCtx, message, primitive.NewObjectIDFromTimestamp(time.Now()), channelId, defaultVoice, validVoices)
+						_, err := gCtx.GetTtsInstance().Generate(gCtx, message, primitive.NewObjectIDFromTimestamp(time.Now()), channelId, defaultVoice, validVoices, 5)
 						if err != nil {
 							logrus.WithError(err).Error("failed to generate tts")
 						}

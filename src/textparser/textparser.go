@@ -48,11 +48,11 @@ func init() {
 	}
 }
 
-func Process(text string, currentVoice parts.Voice, validVoices []parts.Voice) ([]parts.VoicePart, error) {
+func Process(text string, currentVoice parts.Voice, validVoices []parts.Voice, maxVoiceSwaps int) ([]parts.VoicePart, error) {
 	text = strings.ToLower(text)
 
 	stat := override.NormalizeOverride([]parts.VoicePart{{Type: parts.PartTypeRaw, Value: text}})
-	stat = voice.NormalizeVoices(stat, currentVoice, validVoices)
+	stat = voice.NormalizeVoices(stat, currentVoice, validVoices, maxVoiceSwaps)
 	stat = currency.NormalizeCurrency(stat)
 	stat = numbers.NormalizeNumbers(stat)
 	stat = sentance.FixAbbreviations(stat)

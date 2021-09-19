@@ -10,8 +10,8 @@ import (
 )
 
 type TtsInstance interface {
-	SendRequest(ctx context.Context, text string, currentVoice parts.Voice, validVoices []parts.Voice) ([]byte, error)
-	Generate(ctx context.Context, text string, id primitive.ObjectID, channelID primitive.ObjectID, currentVoice parts.Voice, validVoices []parts.Voice) ([]byte, error)
+	SendRequest(ctx context.Context, text string, currentVoice parts.Voice, validVoices []parts.Voice, maxVoiceSwaps int) ([]byte, error)
+	Generate(ctx context.Context, text string, id primitive.ObjectID, channelID primitive.ObjectID, currentVoice parts.Voice, validVoices []parts.Voice, maxVoiceSwaps int) ([]byte, error)
 	Skip(ctx context.Context, channelID primitive.ObjectID) error
 }
 
