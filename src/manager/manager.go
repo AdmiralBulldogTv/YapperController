@@ -3,6 +3,7 @@ package manager
 import (
 	"fmt"
 	"html"
+	"regexp"
 	"strings"
 	"time"
 
@@ -18,6 +19,8 @@ import (
 )
 
 var json = jsoniter.ConfigCompatibleWithStandardLibrary
+
+var bitsRe = regexp.MustCompile(`\b(?:Cheer|BibleThump|cheerwhal|Corgo|uni|ShowLove|Party|SeemsGood|Pride|Kappa|FrankerZ|HeyGuys|DansGame|EleGiggle|TriHard|Kreygasm|4Head|SwiftRage|NotLikeThis|FailFish|VoHiYo|PJSalt|MrDestructoid|bday|RIPCheer|Shamrock)\d+\b`)
 
 func New(ctx global.Context) <-chan struct{} {
 	done := make(chan struct{})
@@ -120,6 +123,10 @@ func (m *Manager) handleSe(gCtx global.Context) error {
 						continue event
 					}
 					message = data.Message
+
+					// filter bit emotes
+					message = bitsRe.ReplaceAllString(message, "")
+
 					amount := data.Amount / 100
 
 					defaultVoice = textparser.VoicesMap["bull"]
@@ -127,6 +134,7 @@ func (m *Manager) handleSe(gCtx global.Context) error {
 					validVoices = append(validVoices,
 						textparser.VoicesMap["bull"],
 						textparser.VoicesMap["arno"],
+						textparser.VoicesMap["krab"],
 					)
 
 					if amount >= 6 {
@@ -137,10 +145,10 @@ func (m *Manager) handleSe(gCtx global.Context) error {
 					}
 
 					if amount >= 10 {
+						defaultVoice = textparser.VoicesMap["pooh"]
 						validVoices = append(validVoices,
 							textparser.VoicesMap["rae"],
 							textparser.VoicesMap["pooh"],
-							textparser.VoicesMap["krab"],
 						)
 					}
 				case streamelements.EventListenerDonation:
@@ -156,6 +164,7 @@ func (m *Manager) handleSe(gCtx global.Context) error {
 					validVoices = append(validVoices,
 						textparser.VoicesMap["bull"],
 						textparser.VoicesMap["arno"],
+						textparser.VoicesMap["krab"],
 					)
 
 					if data.Amount >= 6 {
@@ -166,10 +175,10 @@ func (m *Manager) handleSe(gCtx global.Context) error {
 					}
 
 					if data.Amount >= 10 {
+						defaultVoice = textparser.VoicesMap["pooh"]
 						validVoices = append(validVoices,
 							textparser.VoicesMap["rae"],
 							textparser.VoicesMap["pooh"],
-							textparser.VoicesMap["krab"],
 						)
 					}
 				case streamelements.EventListenerSubscription:
