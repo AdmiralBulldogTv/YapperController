@@ -24,15 +24,10 @@ require (
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 )
 
-require (
-	github.com/go-audio/riff v1.0.0 // indirect
-	github.com/gofiber/fiber/v2 v2.18.0
-)
+require github.com/gofiber/fiber/v2 v2.18.0
 
 require (
 	github.com/andybalholm/brotli v1.0.2 // indirect
-	github.com/go-audio/audio v1.0.0
-	github.com/go-audio/wav v1.0.0
 	github.com/gorilla/websocket v1.4.2
 	github.com/klauspost/compress v1.13.4 // indirect
 	github.com/sirupsen/logrus v1.8.1
@@ -78,7 +73,6 @@ require (
 require (
 	github.com/gobuffalo/packr/v2 v2.8.1
 	github.com/hashicorp/errwrap v1.0.0 // indirect
-	github.com/mattetti/filebuffer v1.0.1
 )
 
 require (

@@ -23,5 +23,7 @@ WORKDIR /app
 
 COPY --from=build_base /tmp/app/yappercontroller /app/yappercontroller
 
+RUN apk add --no-cache sox
+
 # Run the binary program produced by `go install`
 CMD ["/app/yappercontroller"]

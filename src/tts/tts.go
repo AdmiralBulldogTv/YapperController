@@ -1,10 +1,12 @@
 package tts
 
 import (
-	"bytes"
 	"context"
 	"encoding/base64"
 	"fmt"
+	"os"
+	"os/exec"
+	"path"
 	"sync"
 	"time"
 
@@ -14,12 +16,9 @@ import (
 	"github.com/admiralbulldogtv/yappercontroller/src/textparser"
 	"github.com/admiralbulldogtv/yappercontroller/src/textparser/parts"
 	"github.com/admiralbulldogtv/yappercontroller/src/utils"
-	"github.com/go-audio/audio"
-	"github.com/go-audio/wav"
 	"github.com/gobuffalo/packr/v2"
 	"github.com/google/uuid"
 	jsoniter "github.com/json-iterator/go"
-	"github.com/mattetti/filebuffer"
 	"github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
@@ -86,11 +85,10 @@ type respHelper struct {
 	Jid    string
 	Resp   Response
 	Voice  parts.Voice
-	wav    *audio.IntBuffer
 }
 
 var (
-	soundMap = map[string]*audio.IntBuffer{}
+	soundMap = map[string][]byte{}
 )
 
 func init() {
@@ -101,14 +99,7 @@ func init() {
 		if err != nil {
 			panic(err)
 		}
-		decoder := wav.NewDecoder(bytes.NewReader(sp))
-		if !decoder.IsValidFile() {
-			panic("bad file")
-		}
-		soundMap[v], err = decoder.FullPCMBuffer()
-		if err != nil {
-			panic(err)
-		}
+		soundMap[v] = sp
 	}
 }
 
@@ -158,10 +149,14 @@ func (inst *ttsInstance) SendRequest(ctx context.Context, text string, currentVo
 	results := map[string]*respHelper{}
 	idxMap := map[int]*respHelper{}
 
-	// 4mb initial buffer.
-	buf := filebuffer.New(make([]byte, 1<<12))
+	tmpPath := path.Join("tmp", uuid.NewString())
+	if err = os.MkdirAll(tmpPath, 0700); err != nil {
+		return nil, err
+	}
 
-	var encoder *wav.Encoder
+	defer os.RemoveAll(tmpPath)
+
+	files := []string{}
 
 	n := 0
 	for voice, ptslist := range pts.Map() {
@@ -234,68 +229,55 @@ func (inst *ttsInstance) SendRequest(ctx context.Context, text string, currentVo
 		if err != nil {
 			return nil, err
 		}
-		decoder := wav.NewDecoder(bytes.NewReader(sDec))
-		if !decoder.IsValidFile() {
+		if err = os.WriteFile(path.Join(tmpPath, fmt.Sprintf("%s.wav", resp.Jid)), sDec, 0666); err != nil {
 			return nil, err
 		}
-		if err != nil {
-			return nil, err
-		}
-		aBuf, err := decoder.FullPCMBuffer()
-		if err != nil {
-			return nil, err
-		}
-		if encoder == nil {
-			encoder = wav.NewEncoder(buf, aBuf.Format.SampleRate, int(decoder.BitDepth), aBuf.Format.NumChannels, int(decoder.WavAudioFormat))
-		}
-		results[resp.Jid].wav = aBuf
 	}
 
 	close(cb)
 
+	used := map[string]bool{}
+
 	for i := 0; i < len(idxMap); i++ {
 		resp := idxMap[i]
 		if resp.Voice.Type == parts.VoicePartTypeReader {
-			if err := encoder.Write(resp.wav.Clone().AsIntBuffer()); err != nil {
-				return nil, err
-			}
+			files = append(files, path.Join(tmpPath, fmt.Sprintf("%s.wav", resp.Jid)))
 		}
 		// else {
 		// 	// todo add sound bytes.
 		// }
-		var arr *audio.IntBuffer
+		var pause string
 		switch resp.IdxMap[i] {
 		case parts.SpaceTypeLongPause:
-			arr = soundMap["medium-pause.wav"].Clone().AsIntBuffer()
+			pause = "medium-pause.wav"
 		case parts.SpaceTypeMediumPause:
-			arr = soundMap["short-pause.wav"].Clone().AsIntBuffer()
+			pause = "short-pause.wav"
 		case parts.SpaceTypeShortPause:
-			// arr = soundMap["short-pause.wav"].Clone().AsIntBuffer()
 		default:
 			logrus.Warnf("unknown pause %d", resp.IdxMap[i])
 			continue
 		}
-		if arr != nil {
-			if err = encoder.Write(arr); err != nil {
-				return nil, err
+		if pause != "" {
+			pth := path.Join(tmpPath, pause)
+			if !used[pause] {
+				if err = os.WriteFile(pth, soundMap[pause], 0666); err != nil {
+					return nil, err
+				}
+				used[pause] = true
 			}
+			files = append(files, pth)
 		}
 	}
 
-	// adding about 1 seconds on to each audio file.
-	for i := 0; i < 5; i++ {
-		if err = encoder.Write(soundMap["long-pause.wav"].Clone().AsIntBuffer()); err != nil {
-			return nil, err
-		}
-	}
+	outPth := path.Join(tmpPath, "output.wav")
 
-	if err := encoder.Close(); err != nil {
+	files = append(files, outPth)
+
+	if err = exec.CommandContext(ctx, "sox", files...).Run(); err != nil {
 		return nil, err
 	}
 
-	_, _ = buf.Seek(0, 0)
-
-	return buf.Bytes(), nil
+	return os.ReadFile(outPth)
 }
 
 func (inst *ttsInstance) Generate(ctx context.Context, text string, id primitive.ObjectID, channelID primitive.ObjectID, currentVoice parts.Voice, validVoices []parts.Voice, maxVoiceSwaps int) ([]byte, error) {
