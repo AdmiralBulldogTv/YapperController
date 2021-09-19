@@ -271,7 +271,7 @@ func (inst *ttsInstance) SendRequest(ctx context.Context, text string, currentVo
 
 	outPth := path.Join(tmpPath, "output.wav")
 
-	files = append(files, outPth)
+	files = append(files, "-c", "2", "-r", "48000", outPth)
 
 	if err = exec.CommandContext(ctx, "sox", files...).Run(); err != nil {
 		return nil, err
