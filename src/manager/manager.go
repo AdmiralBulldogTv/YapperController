@@ -178,6 +178,12 @@ func (m *Manager) handleSe(gCtx global.Context) error {
 						logrus.WithError(err).Error("failed to parse event")
 						continue event
 					}
+
+					// ignore gifted subs.
+					if data.Gifted {
+						continue event
+					}
+
 					message = data.Message
 
 					// voice calculation

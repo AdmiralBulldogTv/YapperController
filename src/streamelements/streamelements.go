@@ -42,6 +42,7 @@ type Subscription struct {
 	Name    string `json:"name"`
 	Amount  int    `json:"amount"`
 	Tier    string `json:"tier"`
+	Gifted  bool   `json:"gifted"`
 	Message string `json:"message"`
 }
 
