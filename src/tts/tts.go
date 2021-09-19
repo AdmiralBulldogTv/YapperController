@@ -236,7 +236,14 @@ func (inst *ttsInstance) SendRequest(ctx context.Context, text string, currentVo
 
 	close(cb)
 
-	used := map[string]bool{}
+	used := map[string]bool{
+		"long-pause.wav": true,
+	}
+
+	longPause := path.Join(tmpPath, "long-pause.wav")
+	if err = os.WriteFile(longPause, soundMap["long-pause.wav"], 0666); err != nil {
+		return nil, err
+	}
 
 	for i := 0; i < len(idxMap); i++ {
 		resp := idxMap[i]
@@ -271,7 +278,8 @@ func (inst *ttsInstance) SendRequest(ctx context.Context, text string, currentVo
 
 	outPth := path.Join(tmpPath, "output.wav")
 
-	files = append(files, "-c", "2", "-r", "48000", outPth)
+	// add additional long pauses to allow chrome to play the audio correctly.
+	files = append(files, longPause, longPause, longPause, "-c", "2", "-r", "48000", outPth)
 
 	if err = exec.CommandContext(ctx, "sox", files...).Run(); err != nil {
 		return nil, err
