@@ -111,6 +111,14 @@ func NewClient(ctx global.Context) (Client, error) {
 				return
 			}
 			_ = client.SendWhisper(message.User.Name, "skipped tts")
+		} else if msg == "!reload" {
+			err := ctx.GetTtsInstance().Reload(ctx, channelID)
+			if err != nil {
+				_ = client.SendWhisper(message.User.Name, "failed to reload overlay")
+				logrus.WithError(err).Error("failed to reload overlay")
+				return
+			}
+			_ = client.SendWhisper(message.User.Name, "reloaded overlay")
 		}
 	})
 
@@ -128,8 +136,8 @@ func NewClient(ctx global.Context) (Client, error) {
 
 		msg := strings.TrimSpace(message.Message)
 		channelID, _ := primitive.ObjectIDFromHex(ctx.Config().TtsChannelID)
-		if strings.HasPrefix(msg, "!say2 ") {
-			msg = strings.TrimPrefix(msg, "!say2 ")
+		if strings.HasPrefix(msg, "!say ") {
+			msg = strings.TrimPrefix(msg, "!say ")
 			id := primitive.NewObjectIDFromTimestamp(time.Now())
 			if err := ctx.GetTtsInstance().Generate(ctx, msg, &id, channelID, textparser.Voices[0], textparser.Voices, 30, nil); err != nil {
 				err = multierror.Append(err, client.SendMessage(message.Channel, fmt.Sprintf("@%s, failed to generate tts", message.User.DisplayName)))
@@ -137,7 +145,7 @@ func NewClient(ctx global.Context) (Client, error) {
 				return
 			}
 			_ = client.SendMessage(message.Channel, fmt.Sprintf("@%s, generated tts", message.User.DisplayName))
-		} else if msg == "!skip2" {
+		} else if msg == "!skip" {
 			err := ctx.GetTtsInstance().Skip(ctx, channelID)
 			if err != nil {
 				_ = client.SendMessage(message.Channel, fmt.Sprintf("@%s, failed to skip tts", message.User.DisplayName))
@@ -145,6 +153,14 @@ func NewClient(ctx global.Context) (Client, error) {
 				return
 			}
 			_ = client.SendMessage(message.Channel, fmt.Sprintf("@%s, skipped tts", message.User.DisplayName))
+		} else if msg == "!reload" {
+			err := ctx.GetTtsInstance().Reload(ctx, channelID)
+			if err != nil {
+				_ = client.SendMessage(message.Channel, fmt.Sprintf("@%s, failed to reload overlay", message.User.DisplayName))
+				logrus.WithError(err).Error("failed to reload overlay")
+				return
+			}
+			_ = client.SendMessage(message.Channel, fmt.Sprintf("@%s, reloaded overlay", message.User.DisplayName))
 		}
 	})
 

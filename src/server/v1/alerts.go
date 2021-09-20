@@ -5,11 +5,10 @@ import (
 	"strings"
 
 	"github.com/admiralbulldogtv/yappercontroller/src/alerts"
-	"github.com/admiralbulldogtv/yappercontroller/src/global"
 	"github.com/gofiber/fiber/v2"
 )
 
-func Alerts(ctx global.Context, app fiber.Router) {
+func Alerts(app fiber.Router) {
 	lookUpFn := func(mp map[string]alerts.Alert) func(c *fiber.Ctx) error {
 		return func(c *fiber.Ctx) error {
 			file := c.Params("*")

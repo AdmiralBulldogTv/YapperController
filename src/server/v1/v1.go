@@ -15,5 +15,5 @@ func Api(ctx global.Context, app fiber.Router) {
 
 	Twitch(ctx, app.Group("/twitch"))
 
-	Alerts(ctx, app.Group("/alerts"))
+	Alerts(app.Group("/alerts"))
 }

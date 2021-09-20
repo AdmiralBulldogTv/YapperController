@@ -58,9 +58,8 @@ type Manager struct {
 }
 
 type alertHelper struct {
-	Type   string
-	Name   string
-	Bypass bool
+	Type string
+	Name string
 }
 
 func (a alertHelper) Parse() (string, string) {
@@ -268,7 +267,6 @@ func (m *Manager) handleSe(gCtx global.Context) error {
 					if data.Gifted {
 						alert.Name = "SubscriberGift"
 						message = ""
-						alert.Bypass = true
 						alertText = fmt.Sprintf("%s gifted a sub to %s", data.Sender, data.Name)
 					} else if data.BulkGifted {
 						alert.Name = "SubscriberGift"
@@ -284,10 +282,11 @@ func (m *Manager) handleSe(gCtx global.Context) error {
 						alertText = fmt.Sprintf("%s gifted %d subs", data.Sender, data.Amount)
 					} else {
 						alertText = fmt.Sprintf("%s subscribed for %d months", data.Name, data.Amount)
+						defaultVoice = textparser.VoicesMap["obama"]
+						validVoices = append(validVoices, textparser.VoicesMap["bull"], textparser.VoicesMap["obama"])
+
 						// voice calculation
-						if data.Amount >= 1 {
-							defaultVoice = textparser.VoicesMap["bull"]
-							validVoices = append(validVoices, textparser.VoicesMap["bull"])
+						if data.Amount == 1 {
 							alertText = fmt.Sprintf("%s just subscribed", data.Name)
 						}
 
@@ -300,7 +299,6 @@ func (m *Manager) handleSe(gCtx global.Context) error {
 						}
 
 						if data.Amount >= 6 {
-							defaultVoice = textparser.VoicesMap["obama"]
 							validVoices = append(validVoices, textparser.VoicesMap["obama"])
 
 							alert.Name = "Subscriber6"
@@ -311,7 +309,6 @@ func (m *Manager) handleSe(gCtx global.Context) error {
 						}
 
 						if data.Amount >= 10 {
-							defaultVoice = textparser.VoicesMap["arno"]
 							validVoices = append(validVoices, textparser.VoicesMap["arno"])
 						}
 
@@ -320,7 +317,6 @@ func (m *Manager) handleSe(gCtx global.Context) error {
 						}
 
 						if data.Amount >= 13 {
-							defaultVoice = textparser.VoicesMap["lac"]
 							validVoices = append(validVoices, textparser.VoicesMap["lac"])
 						}
 
@@ -329,12 +325,10 @@ func (m *Manager) handleSe(gCtx global.Context) error {
 						}
 
 						if data.Amount >= 21 {
-							defaultVoice = textparser.VoicesMap["krab"]
 							validVoices = append(validVoices, textparser.VoicesMap["krab"])
 						}
 
 						if data.Amount >= 22 {
-							defaultVoice = textparser.VoicesMap["glad"]
 							validVoices = append(validVoices, textparser.VoicesMap["glad"])
 						}
 
@@ -343,7 +337,6 @@ func (m *Manager) handleSe(gCtx global.Context) error {
 						}
 
 						if data.Amount >= 30 {
-							defaultVoice = textparser.VoicesMap["bull"]
 							alert.Name = "Subscriber30"
 						}
 
@@ -352,7 +345,6 @@ func (m *Manager) handleSe(gCtx global.Context) error {
 						}
 
 						if data.Amount >= 41 {
-							defaultVoice = textparser.VoicesMap["rae"]
 							validVoices = append(validVoices, textparser.VoicesMap["rae"])
 						}
 
@@ -369,7 +361,6 @@ func (m *Manager) handleSe(gCtx global.Context) error {
 						}
 
 						if data.Amount >= 56 {
-							defaultVoice = textparser.VoicesMap["pooh"]
 							validVoices = append(validVoices, textparser.VoicesMap["pooh"])
 						}
 
@@ -392,27 +383,25 @@ func (m *Manager) handleSe(gCtx global.Context) error {
 
 				logrus.Infof("generating tts from request %s", evnt)
 				message = strings.TrimSpace(html.UnescapeString(message))
-				if message != "" || alert.Bypass {
-					alt := datastructures.SseEventTtsAlert{}
-					image, audio := alert.Parse()
-					alt.Audio = audio
-					alt.Image = image
-					alt.Text = alertText
-					alt.SubText = strings.TrimSpace(html.UnescapeString(alertSubText))
-					alt.Type = alert.Type
-					go func(message string, alert datastructures.SseEventTtsAlert) {
-						channelId, _ := primitive.ObjectIDFromHex(gCtx.Config().TtsChannelID)
-						var id *primitive.ObjectID
-						if message != "" {
-							idt := primitive.NewObjectIDFromTimestamp(time.Now())
-							id = &idt
-						}
-						if err := gCtx.GetTtsInstance().Generate(gCtx, message, id, channelId, defaultVoice, validVoices, 5, &alert); err != nil {
-							logrus.WithError(err).Error("failed to generate tts")
-						}
-						logrus.Info("generated tts")
-					}(message, alt)
-				}
+				alt := datastructures.SseEventTtsAlert{}
+				image, audio := alert.Parse()
+				alt.Audio = audio
+				alt.Image = image
+				alt.Text = alertText
+				alt.SubText = strings.TrimSpace(html.UnescapeString(alertSubText))
+				alt.Type = alert.Type
+				go func(message string, alert datastructures.SseEventTtsAlert) {
+					channelId, _ := primitive.ObjectIDFromHex(gCtx.Config().TtsChannelID)
+					var id *primitive.ObjectID
+					if message != "" {
+						idt := primitive.NewObjectIDFromTimestamp(time.Now())
+						id = &idt
+					}
+					if err := gCtx.GetTtsInstance().Generate(gCtx, message, id, channelId, defaultVoice, validVoices, 5, &alert); err != nil {
+						logrus.WithError(err).Error("failed to generate tts")
+					}
+					logrus.Info("generated tts")
+				}(message, alt)
 			}
 		}
 	}()

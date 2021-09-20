@@ -321,3 +321,7 @@ func (inst *ttsInstance) Generate(ctx context.Context, text string, id *primitiv
 func (inst *ttsInstance) Skip(ctx context.Context, channelID primitive.ObjectID) error {
 	return inst.gCtx.GetRedisInstance().Publish(ctx, fmt.Sprintf("overlay:events:%s", channelID.Hex()), `{"event":"skip"}`)
 }
+
+func (inst *ttsInstance) Reload(ctx context.Context, channelID primitive.ObjectID) error {
+	return inst.gCtx.GetRedisInstance().Publish(ctx, fmt.Sprintf("overlay:events:%s", channelID.Hex()), `{"event":"reload"}`)
+}
