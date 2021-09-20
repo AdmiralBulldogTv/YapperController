@@ -39,11 +39,14 @@ type EventTestPayload struct {
 }
 
 type Subscription struct {
-	Name    string `json:"name"`
-	Amount  int    `json:"amount"`
-	Tier    string `json:"tier"`
-	Gifted  bool   `json:"gifted"`
-	Message string `json:"message"`
+	Name       string      `json:"name"`
+	Amount     int         `json:"amount"`
+	Tier       interface{} `json:"tier"`
+	Count      int         `json:"count"`
+	Gifted     bool        `json:"gifted"`
+	BulkGifted bool        `json:"bulkGifted"`
+	Sender     string      `json:"sender"`
+	Message    string      `json:"message"`
 }
 
 type Cheer struct {

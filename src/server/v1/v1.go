@@ -14,4 +14,6 @@ func Api(ctx global.Context, app fiber.Router) {
 	app.Get("/wav/:id.wav", Wav(ctx))
 
 	Twitch(ctx, app.Group("/twitch"))
+
+	Alerts(ctx, app.Group("/alerts"))
 }

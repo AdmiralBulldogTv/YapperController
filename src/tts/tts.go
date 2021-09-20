@@ -288,14 +288,15 @@ func (inst *ttsInstance) SendRequest(ctx context.Context, text string, currentVo
 	return os.ReadFile(outPth)
 }
 
-func (inst *ttsInstance) Generate(ctx context.Context, text string, id primitive.ObjectID, channelID primitive.ObjectID, currentVoice parts.Voice, validVoices []parts.Voice, maxVoiceSwaps int) ([]byte, error) {
-	data, err := inst.SendRequest(ctx, text, currentVoice, validVoices, maxVoiceSwaps)
-	if err != nil {
-		return data, err
-	}
-
-	if err := inst.gCtx.GetRedisInstance().Set(ctx, fmt.Sprintf("generated:tts:%s", id.Hex()), utils.B2S(data), time.Hour); err != nil {
-		return nil, err
+func (inst *ttsInstance) Generate(ctx context.Context, text string, id *primitive.ObjectID, channelID primitive.ObjectID, currentVoice parts.Voice, validVoices []parts.Voice, maxVoiceSwaps int, alert *datastructures.SseEventTtsAlert) error {
+	if text != "" {
+		data, err := inst.SendRequest(ctx, text, currentVoice, validVoices, maxVoiceSwaps)
+		if err != nil {
+			return err
+		}
+		if err := inst.gCtx.GetRedisInstance().Set(ctx, fmt.Sprintf("generated:tts:%s", id.Hex()), utils.B2S(data), time.Hour); err != nil {
+			return err
+		}
 	}
 
 	if !channelID.IsZero() {
@@ -303,17 +304,18 @@ func (inst *ttsInstance) Generate(ctx context.Context, text string, id primitive
 			Event: "tts",
 			Payload: datastructures.SseEventTts{
 				WavID: id,
+				Alert: alert,
 			},
 		})
 		if err != nil {
-			return nil, err
+			return err
 		}
 		if err = inst.gCtx.GetRedisInstance().Publish(ctx, fmt.Sprintf("overlay:events:%s", channelID.Hex()), event); err != nil {
-			return nil, err
+			return err
 		}
 	}
 
-	return data, err
+	return nil
 }
 
 func (inst *ttsInstance) Skip(ctx context.Context, channelID primitive.ObjectID) error {

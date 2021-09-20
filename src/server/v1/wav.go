@@ -14,7 +14,6 @@ import (
 
 func Wav(ctx global.Context) func(c *fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
-		logrus.Info(c.Params("id"))
 		id, err := primitive.ObjectIDFromHex(c.Params("id"))
 		if err != nil {
 			return c.SendStatus(404)

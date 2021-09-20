@@ -96,8 +96,8 @@ func NewClient(ctx global.Context) (Client, error) {
 		channelID, _ := primitive.ObjectIDFromHex(ctx.Config().TtsChannelID)
 		if strings.HasPrefix(msg, "!say ") {
 			msg = strings.TrimPrefix(msg, "!say ")
-			_, err := ctx.GetTtsInstance().Generate(ctx, msg, primitive.NewObjectIDFromTimestamp(time.Now()), channelID, textparser.Voices[0], textparser.Voices, 10)
-			if err != nil {
+			id := primitive.NewObjectIDFromTimestamp(time.Now())
+			if err := ctx.GetTtsInstance().Generate(ctx, msg, &id, channelID, textparser.Voices[0], textparser.Voices, 30, nil); err != nil {
 				err = multierror.Append(err, client.SendWhisper(message.User.Name, "failed to generate tts"))
 				logrus.WithError(err).Error("failed to generate tts")
 				return
@@ -128,16 +128,16 @@ func NewClient(ctx global.Context) (Client, error) {
 
 		msg := strings.TrimSpace(message.Message)
 		channelID, _ := primitive.ObjectIDFromHex(ctx.Config().TtsChannelID)
-		if strings.HasPrefix(msg, "!say ") {
-			msg = strings.TrimPrefix(msg, "!say ")
-			_, err := ctx.GetTtsInstance().Generate(ctx, msg, primitive.NewObjectIDFromTimestamp(time.Now()), channelID, textparser.Voices[0], textparser.Voices, 10)
-			if err != nil {
+		if strings.HasPrefix(msg, "!say2 ") {
+			msg = strings.TrimPrefix(msg, "!say2 ")
+			id := primitive.NewObjectIDFromTimestamp(time.Now())
+			if err := ctx.GetTtsInstance().Generate(ctx, msg, &id, channelID, textparser.Voices[0], textparser.Voices, 30, nil); err != nil {
 				err = multierror.Append(err, client.SendMessage(message.Channel, fmt.Sprintf("@%s, failed to generate tts", message.User.DisplayName)))
 				logrus.WithError(err).Error("failed to generate tts")
 				return
 			}
 			_ = client.SendMessage(message.Channel, fmt.Sprintf("@%s, generated tts", message.User.DisplayName))
-		} else if msg == "!skip" {
+		} else if msg == "!skip2" {
 			err := ctx.GetTtsInstance().Skip(ctx, channelID)
 			if err != nil {
 				_ = client.SendMessage(message.Channel, fmt.Sprintf("@%s, failed to skip tts", message.User.DisplayName))

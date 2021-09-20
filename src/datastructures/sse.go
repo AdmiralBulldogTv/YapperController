@@ -8,8 +8,16 @@ type SseEvent struct {
 }
 
 type SseEventTts struct {
-	WavID          primitive.ObjectID         `json:"wav_id"`
-	Transcriptions []SseEventTtsTranscription `json:"transcriptions"`
+	WavID *primitive.ObjectID `json:"wav_id"`
+	Alert *SseEventTtsAlert   `json:"alert"`
+}
+
+type SseEventTtsAlert struct {
+	Type    string `json:"type"`
+	Image   string `json:"image"`
+	Audio   string `json:"audio"`
+	Text    string `json:"text"`
+	SubText string `json:"sub_text"`
 }
 
 type SseEventTtsTranscription struct {
