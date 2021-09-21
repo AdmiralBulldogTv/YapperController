@@ -22,7 +22,7 @@ import (
 
 var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
-var bitsRe = regexp.MustCompile(`\b(?:Cheer|BibleThump|cheerwhal|Corgo|uni|ShowLove|Party|SeemsGood|Pride|Kappa|FrankerZ|HeyGuys|DansGame|EleGiggle|TriHard|Kreygasm|4Head|SwiftRage|NotLikeThis|FailFish|VoHiYo|PJSalt|MrDestructoid|bday|RIPCheer|Shamrock)\d+\b`)
+var bitsRe = regexp.MustCompile(`(?i)\b(?:Cheer|BibleThump|cheerwhal|Corgo|uni|ShowLove|Party|SeemsGood|Pride|Kappa|FrankerZ|HeyGuys|DansGame|EleGiggle|TriHard|Kreygasm|4Head|SwiftRage|NotLikeThis|FailFish|VoHiYo|PJSalt|MrDestructoid|bday|RIPCheer|Shamrock)\d+\b`)
 
 func New(ctx global.Context) <-chan struct{} {
 	done := make(chan struct{})
