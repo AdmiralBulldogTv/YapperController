@@ -153,7 +153,7 @@ func (m *Manager) handleSe(gCtx global.Context) error {
 					}
 					message = data.Message
 					alertSubText = data.Message
-					alertText = fmt.Sprintf("%s cheered %d bits", data.DisplayName, data.Amount)
+					alertText = fmt.Sprintf("~%s cheered ~%d bits", data.DisplayName, data.Amount)
 
 					// filter bit emotes
 					message = bitsRe.ReplaceAllString(message, "")
@@ -208,7 +208,7 @@ func (m *Manager) handleSe(gCtx global.Context) error {
 					}
 					message = data.Message
 					alertSubText = data.Message
-					alertText = fmt.Sprintf("%s donated €%.2f", data.Name, data.Amount)
+					alertText = fmt.Sprintf("~%s donated ~€%.2f", data.Name, data.Amount)
 
 					alert.Type = "donation"
 					alert.Name = "DonationDefault"
@@ -267,7 +267,7 @@ func (m *Manager) handleSe(gCtx global.Context) error {
 					if data.Gifted {
 						alert.Name = "SubscriberGift"
 						message = ""
-						alertText = fmt.Sprintf("%s gifted a sub to %s", data.Sender, data.Name)
+						alertText = fmt.Sprintf("~%s gifted a sub to ~%s", data.Sender, data.Name)
 					} else if data.BulkGifted {
 						alert.Name = "SubscriberGift"
 						if data.Amount >= 5 {
@@ -279,15 +279,15 @@ func (m *Manager) handleSe(gCtx global.Context) error {
 						if data.Amount >= 95 {
 							alert.Name = "SubscriberGift95"
 						}
-						alertText = fmt.Sprintf("%s gifted %d subs", data.Sender, data.Amount)
+						alertText = fmt.Sprintf("~%s gifted ~%d subs", data.Sender, data.Amount)
 					} else {
-						alertText = fmt.Sprintf("%s subscribed for %d months", data.Name, data.Amount)
+						alertText = fmt.Sprintf("~%s subscribed for ~%d months", data.Name, data.Amount)
 						defaultVoice = textparser.VoicesMap["obama"]
 						validVoices = append(validVoices, textparser.VoicesMap["bull"], textparser.VoicesMap["obama"])
 
 						// voice calculation
 						if data.Amount == 1 {
-							alertText = fmt.Sprintf("%s just subscribed", data.Name)
+							alertText = fmt.Sprintf("~%s just subscribed", data.Name)
 						}
 
 						if data.Amount >= 2 {
