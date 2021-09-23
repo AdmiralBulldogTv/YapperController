@@ -208,7 +208,7 @@ func (m *Manager) handleSe(gCtx global.Context) error {
 					}
 					message = data.Message
 					alertSubText = data.Message
-					alertText = fmt.Sprintf("~%s donated ~€%.2f", data.Name, data.Amount)
+					alertText = fmt.Sprintf("~%s donated ~€%.2f", strings.ReplaceAll(data.Name, " ", ""), data.Amount)
 
 					alert.Type = "donation"
 					alert.Name = "DonationDefault"

@@ -105,7 +105,7 @@ func (c *cl) Connect(uri string) error {
 	go func() {
 		<-ctx.Done()
 		c.events <- Event{
-			Name: "discon-nect",
+			Name: "disconnect",
 		}
 	}()
 
