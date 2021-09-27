@@ -193,5 +193,35 @@
     "fast_path": null,
     "onnx_path": "./.models/narr2/narr2_voc.onnx",
     "cmudict_path": null
+  },
+  {
+    "speaker": "gabe",
+    "gpu": false,
+    "warm_up": false,
+    "gate_threshold": 0.1,
+    "period": true,
+    "start": 0,
+    "pace": 0.9,
+    "pitch_shift": 0,
+    "p_arpabet": 1,
+    "taco_path": null,
+    "fast_path": "./.models/gabe/gabe_fast_mel.pt",
+    "onnx_path": "./.models/gabe/gabe_voc.onnx",
+    "cmudict_path": "./.models/cmudict/default"
+  },
+  {
+    "speaker": "trump",
+    "gpu": false,
+    "warm_up": false,
+    "gate_threshold": 0.1,
+    "period": true,
+    "start": 0,
+    "pace": 1,
+    "pitch_shift": 0,
+    "p_arpabet": 1,
+    "taco_path": null,
+    "fast_path": "./.models/trump/trump_fast_mel.pt",
+    "onnx_path": "./.models/trump/trump_voc.onnx",
+    "cmudict_path": "./.models/cmudict/default"
   }
 ]
