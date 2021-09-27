@@ -282,8 +282,8 @@ func (m *Manager) handleSe(gCtx global.Context) error {
 						alertText = fmt.Sprintf("~%s gifted ~%d subs", data.Sender, data.Amount)
 					} else {
 						alertText = fmt.Sprintf("~%s subscribed for ~%d months", data.Name, data.Amount)
-						defaultVoice = textparser.VoicesMap["obama"]
-						validVoices = append(validVoices, textparser.VoicesMap["bull"], textparser.VoicesMap["obama"])
+						defaultVoice = textparser.VoicesMap["trump"]
+						validVoices = append(validVoices, textparser.VoicesMap["bull"], textparser.VoicesMap["obama"], textparser.VoicesMap["trump"])
 
 						// voice calculation
 						if data.Amount == 1 {
