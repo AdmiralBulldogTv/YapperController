@@ -58,7 +58,7 @@ func Process(text string, currentVoice parts.Voice, validVoices []parts.Voice, m
 	stat = sentance.FixAbbreviations(stat)
 	stat = words.NormalizeWords(stat)
 
-	stat = sentance.SplitVoices(stat, 60)
+	stat = sentance.SplitVoices(stat, 250)
 	stat = strip.NormalizeCharacters(stat)
 
 	return stat, nil
