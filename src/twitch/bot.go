@@ -260,6 +260,10 @@ func NewClient(ctx global.Context) (Client, error) {
 			displayName := message.User.DisplayName
 			recipientDisplayName := message.MsgParams["msg-param-recipient-display-name"]
 			alertText = fmt.Sprintf("~%s gifted a sub to ~%s", displayName, recipientDisplayName)
+			subPlan := message.MsgParams["msg-param-sub-plan"]
+			if subPlan != "1000" {
+				alertText = fmt.Sprintf("~%s gifted a tier %s sub to %s", displayName, string(subPlan[0]), recipientDisplayName)
+			}
 
 			var (
 				senderCount int
