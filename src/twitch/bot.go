@@ -14,7 +14,6 @@ import (
 	"github.com/admiralbulldogtv/yappercontroller/src/global"
 	"github.com/admiralbulldogtv/yappercontroller/src/textparser"
 	"github.com/admiralbulldogtv/yappercontroller/src/textparser/parts"
-	"github.com/davecgh/go-spew/spew"
 	"github.com/gempir/go-twitch-irc/v2"
 	"github.com/go-redis/redis/v8"
 	"github.com/hashicorp/go-multierror"
@@ -178,6 +177,7 @@ func NewClient(ctx global.Context) (Client, error) {
 	// in theory this map will grow really really large.
 	// thus every hour or so we need to go through the map and remove old ones.
 	bulkGiftMap := map[string]time.Time{}
+	bulkGiftSingle := map[string]int{}
 	go func() {
 		tick := time.NewTicker(time.Hour)
 		defer tick.Stop()
@@ -191,6 +191,7 @@ func NewClient(ctx global.Context) (Client, error) {
 				for k, v := range bulkGiftMap {
 					if v.Before(cutOff) {
 						delete(bulkGiftMap, k)
+						delete(bulkGiftSingle, k)
 					}
 				}
 				mtx.Unlock()
@@ -201,10 +202,11 @@ func NewClient(ctx global.Context) (Client, error) {
 	client.cl.OnUserNoticeMessage(func(message twitch.UserNoticeMessage) {
 		mtx.Lock()
 		defer mtx.Unlock()
-		alert := datastructures.AlertHelper{}
+		alert := datastructures.AlertHelper{
+			Type: "subscriber",
+		}
 		alertText := ""
 		subText := ""
-		spew.Dump(message.MsgParams)
 		switch message.MsgID {
 		case "submysterygift": // multi gift subs
 			giftCount, err := strconv.Atoi(message.MsgParams["msg-param-mass-gift-count"])
@@ -214,6 +216,7 @@ func NewClient(ctx global.Context) (Client, error) {
 			}
 			if giftCount == 1 {
 				// single gifts are handled by "subgift" event.
+				bulkGiftSingle[message.MsgParams["msg-param-origin-id"]] = giftCount
 				return
 			}
 			// make sure the "subgift" event does not process these events.
@@ -253,10 +256,18 @@ func NewClient(ctx global.Context) (Client, error) {
 			recipientDisplayName := message.MsgParams["msg-param-recipient-display-name"]
 			alertText = fmt.Sprintf("~%s gifted a sub to ~%s", displayName, recipientDisplayName)
 
-			senderCount, err := strconv.Atoi(message.MsgParams["msg-param-sender-count"])
-			if err != nil {
-				logrus.WithError(err).Error("bad read from gift subs")
-				return
+			var (
+				senderCount int
+				err         error
+			)
+			if v, ok := bulkGiftSingle[message.MsgParams["msg-param-origin-id"]]; ok {
+				senderCount = v
+			} else {
+				senderCount, err = strconv.Atoi(message.MsgParams["msg-param-sender-count"])
+				if err != nil {
+					logrus.WithError(err).Error("bad read from gift subs")
+					return
+				}
 			}
 			subText = fmt.Sprintf("they have gifted %d subs to the channel", senderCount)
 			if senderCount == 1 {
