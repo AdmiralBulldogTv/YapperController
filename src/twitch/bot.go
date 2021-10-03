@@ -14,6 +14,7 @@ import (
 	"github.com/admiralbulldogtv/yappercontroller/src/global"
 	"github.com/admiralbulldogtv/yappercontroller/src/textparser"
 	"github.com/admiralbulldogtv/yappercontroller/src/textparser/parts"
+	"github.com/davecgh/go-spew/spew"
 	"github.com/gempir/go-twitch-irc/v2"
 	"github.com/go-redis/redis/v8"
 	"github.com/hashicorp/go-multierror"
@@ -83,7 +84,7 @@ func NewClient(ctx global.Context) (Client, error) {
 	client := &twitchClient{}
 	client.cl = twitch.NewClient(ctx.Config().TwitchBotUsername, fmt.Sprintf("oauth:%s", token.AccessToken))
 
-	client.cl.Join(ctx.Config().TwitchBotControlChannel)
+	client.cl.Join(ctx.Config().TwitchBotControlChannel, ctx.Config().TwitchStreamerChannel)
 	client.cl.OnWhisperMessage(func(message twitch.WhisperMessage) {
 		found := false
 		for _, v := range ctx.Config().WhitelistedTwitchAccounts {
@@ -203,6 +204,7 @@ func NewClient(ctx global.Context) (Client, error) {
 		alert := datastructures.AlertHelper{}
 		alertText := ""
 		subText := ""
+		spew.Dump(message.MsgParams)
 		switch message.MsgID {
 		case "submysterygift": // multi gift subs
 			giftCount, err := strconv.Atoi(message.MsgParams["mass-gift-count"])

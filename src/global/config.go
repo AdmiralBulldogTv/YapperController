@@ -38,6 +38,7 @@ type ServerCfg struct {
 	TwitchBotID               string   `mapstructure:"twitch_bot_id"`
 	TwitchBotUsername         string   `mapstructure:"twitch_bot_username"`
 	TwitchBotControlChannel   string   `mapstructure:"twitch_bot_control_channel"`
+	TwitchStreamerChannel     string   `mapstructure:"twitch_streamer_channel"`
 	WhitelistedTwitchAccounts []string `mapstructure:"whitelisted_twitch_accounts"`
 
 	FrontendDomain string `mapstructure:"frontend_domain"`
