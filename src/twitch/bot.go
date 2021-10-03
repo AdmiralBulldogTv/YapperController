@@ -215,13 +215,17 @@ func NewClient(ctx global.Context) (Client, error) {
 				return
 			}
 			if giftCount == 1 {
-				// single gifts are handled by "subgift" event.
-				senderCount, err := strconv.Atoi(message.MsgParams["msg-param-sender-count"])
-				if err != nil {
-					logrus.WithError(err).Error("bad read from gift subs")
-					return
+				if message.MsgParams["msg-param-sender-count"] != "" {
+					// single gifts are handled by "subgift" event.
+					senderCount, err := strconv.Atoi(message.MsgParams["msg-param-sender-count"])
+					if err != nil {
+						logrus.WithError(err).Error("bad read from gift subs")
+						return
+					}
+					bulkGiftSingle[message.MsgParams["msg-param-origin-id"]] = senderCount
+				} else {
+					bulkGiftSingle[message.MsgParams["msg-param-origin-id"]] = 0
 				}
-				bulkGiftSingle[message.MsgParams["msg-param-origin-id"]] = senderCount
 				return
 			}
 			// make sure the "subgift" event does not process these events.
@@ -272,15 +276,19 @@ func NewClient(ctx global.Context) (Client, error) {
 			if v, ok := bulkGiftSingle[message.MsgParams["msg-param-origin-id"]]; ok {
 				senderCount = v
 			} else {
-				senderCount, err = strconv.Atoi(message.MsgParams["msg-param-sender-count"])
-				if err != nil {
-					logrus.WithError(err).Error("bad read from gift subs")
-					return
+				if message.MsgParams["msg-param-sender-count"] != "" {
+					senderCount, err = strconv.Atoi(message.MsgParams["msg-param-sender-count"])
+					if err != nil {
+						logrus.WithError(err).Error("bad read from gift subs")
+						return
+					}
 				}
 			}
-			subText = fmt.Sprintf("they have gifted %d subs to the channel", senderCount)
-			if senderCount == 1 {
-				subText = "this is their first gifted sub"
+			if senderCount != 0 {
+				subText = fmt.Sprintf("they have gifted %d subs to the channel", senderCount)
+				if senderCount == 1 {
+					subText = "this is their first gifted sub"
+				}
 			}
 		default:
 			// ignore all other twitch events.
