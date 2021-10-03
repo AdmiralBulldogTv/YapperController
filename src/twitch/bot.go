@@ -216,7 +216,12 @@ func NewClient(ctx global.Context) (Client, error) {
 			}
 			if giftCount == 1 {
 				// single gifts are handled by "subgift" event.
-				bulkGiftSingle[message.MsgParams["msg-param-origin-id"]] = giftCount
+				senderCount, err := strconv.Atoi(message.MsgParams["msg-param-sender-count"])
+				if err != nil {
+					logrus.WithError(err).Error("bad read from gift subs")
+					return
+				}
+				bulkGiftSingle[message.MsgParams["msg-param-origin-id"]] = senderCount
 				return
 			}
 			// make sure the "subgift" event does not process these events.
