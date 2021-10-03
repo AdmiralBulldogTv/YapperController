@@ -207,7 +207,7 @@ func NewClient(ctx global.Context) (Client, error) {
 		spew.Dump(message.MsgParams)
 		switch message.MsgID {
 		case "submysterygift": // multi gift subs
-			giftCount, err := strconv.Atoi(message.MsgParams["mass-gift-count"])
+			giftCount, err := strconv.Atoi(message.MsgParams["msg-param-mass-gift-count"])
 			if err != nil {
 				logrus.WithError(err).Error("bad read from gift subs")
 				return
@@ -217,14 +217,14 @@ func NewClient(ctx global.Context) (Client, error) {
 				return
 			}
 			// make sure the "subgift" event does not process these events.
-			bulkGiftMap[message.MsgParams["origin-id"]] = time.Now()
+			bulkGiftMap[message.MsgParams["msg-param-origin-id"]] = time.Now()
 			// we can now handle this a bulk gift sub.
-			senderCount, err := strconv.Atoi(message.MsgParams["sender-count"])
+			senderCount, err := strconv.Atoi(message.MsgParams["msg-param-sender-count"])
 			if err != nil {
 				logrus.WithError(err).Error("bad read from gift subs")
 				return
 			}
-			subPlan := message.MsgParams["sub-plan"]
+			subPlan := message.MsgParams["msg-param-sub-plan"]
 			displayName := message.User.DisplayName
 
 			alert.Name = "SubscriberGift"
@@ -243,17 +243,17 @@ func NewClient(ctx global.Context) (Client, error) {
 			}
 			subText = fmt.Sprintf("they have gifted %d subs to the channel", senderCount)
 		case "subgift":
-			if !bulkGiftMap[message.MsgParams["origin-id"]].IsZero() {
+			if !bulkGiftMap[message.MsgParams["msg-param-origin-id"]].IsZero() {
 				// has been already handled by the mystrygift event.
 				return
 			}
 			// single giftsub.
 			alert.Name = "SubscriberGift"
 			displayName := message.User.DisplayName
-			recipientDisplayName := message.MsgParams["recipient-display-name"]
+			recipientDisplayName := message.MsgParams["msg-param-recipient-display-name"]
 			alertText = fmt.Sprintf("~%s gifted a sub to ~%s", displayName, recipientDisplayName)
 
-			senderCount, err := strconv.Atoi(message.MsgParams["sender-count"])
+			senderCount, err := strconv.Atoi(message.MsgParams["msg-param-sender-count"])
 			if err != nil {
 				logrus.WithError(err).Error("bad read from gift subs")
 				return
