@@ -5,11 +5,15 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"strconv"
 	"strings"
+	"sync"
 	"time"
 
+	"github.com/admiralbulldogtv/yappercontroller/src/datastructures"
 	"github.com/admiralbulldogtv/yappercontroller/src/global"
 	"github.com/admiralbulldogtv/yappercontroller/src/textparser"
+	"github.com/admiralbulldogtv/yappercontroller/src/textparser/parts"
 	"github.com/gempir/go-twitch-irc/v2"
 	"github.com/go-redis/redis/v8"
 	"github.com/hashicorp/go-multierror"
@@ -123,6 +127,11 @@ func NewClient(ctx global.Context) (Client, error) {
 	})
 
 	client.cl.OnPrivateMessage(func(message twitch.PrivateMessage) {
+		// ignore non control channel messages.
+		if !strings.EqualFold(message.Channel, ctx.Config().TwitchBotControlChannel) {
+			return
+		}
+
 		found := false
 		for _, v := range ctx.Config().WhitelistedTwitchAccounts {
 			if v == message.User.ID {
@@ -162,6 +171,114 @@ func NewClient(ctx global.Context) (Client, error) {
 			}
 			_ = client.SendMessage(message.Channel, fmt.Sprintf("@%s, reloaded overlay", message.User.DisplayName))
 		}
+	})
+
+	mtx := sync.Mutex{}
+	// in theory this map will grow really really large.
+	// thus every hour or so we need to go through the map and remove old ones.
+	bulkGiftMap := map[string]time.Time{}
+	go func() {
+		tick := time.NewTicker(time.Hour)
+		defer tick.Stop()
+		for {
+			select {
+			case <-ctx.Done():
+				return
+			case <-tick.C:
+				mtx.Lock()
+				cutOff := time.Now().Add(-time.Hour)
+				for k, v := range bulkGiftMap {
+					if v.Before(cutOff) {
+						delete(bulkGiftMap, k)
+					}
+				}
+				mtx.Unlock()
+			}
+		}
+	}()
+
+	client.cl.OnUserNoticeMessage(func(message twitch.UserNoticeMessage) {
+		mtx.Lock()
+		defer mtx.Unlock()
+		alert := datastructures.AlertHelper{}
+		alertText := ""
+		subText := ""
+		switch message.MsgID {
+		case "submysterygift": // multi gift subs
+			giftCount, err := strconv.Atoi(message.MsgParams["mass-gift-count"])
+			if err != nil {
+				logrus.WithError(err).Error("bad read from gift subs")
+				return
+			}
+			if giftCount == 1 {
+				// single gifts are handled by "subgift" event.
+				return
+			}
+			// make sure the "subgift" event does not process these events.
+			bulkGiftMap[message.MsgParams["origin-id"]] = time.Now()
+			// we can now handle this a bulk gift sub.
+			senderCount, err := strconv.Atoi(message.MsgParams["sender-count"])
+			if err != nil {
+				logrus.WithError(err).Error("bad read from gift subs")
+				return
+			}
+			subPlan := message.MsgParams["sub-plan"]
+			displayName := message.User.DisplayName
+
+			alert.Name = "SubscriberGift"
+			if giftCount >= 5 {
+				alert.Name = "SubscriberGift5"
+			}
+			if giftCount >= 25 {
+				alert.Name = "SubscriberGift25"
+			}
+			if giftCount >= 95 {
+				alert.Name = "SubscriberGift95"
+			}
+			alertText = fmt.Sprintf("~%s gifted ~%d subs", displayName, giftCount)
+			if subPlan != "1000" {
+				alertText = fmt.Sprintf("~%s gifted ~%d tier %s subs", displayName, giftCount, string(subPlan[0]))
+			}
+			subText = fmt.Sprintf("they have gifted %d subs to the channel", senderCount)
+		case "subgift":
+			if !bulkGiftMap[message.MsgParams["origin-id"]].IsZero() {
+				// has been already handled by the mystrygift event.
+				return
+			}
+			// single giftsub.
+			alert.Name = "SubscriberGift"
+			displayName := message.User.DisplayName
+			recipientDisplayName := message.MsgParams["recipient-display-name"]
+			alertText = fmt.Sprintf("~%s gifted a sub to ~%s", displayName, recipientDisplayName)
+
+			senderCount, err := strconv.Atoi(message.MsgParams["sender-count"])
+			if err != nil {
+				logrus.WithError(err).Error("bad read from gift subs")
+				return
+			}
+			subText = fmt.Sprintf("they have gifted %d subs to the channel", senderCount)
+			if senderCount == 1 {
+				subText = "this is their first gifted sub"
+			}
+		default:
+			// ignore all other twitch events.
+			return
+		}
+
+		alt := datastructures.SseEventTtsAlert{}
+		image, audio := alert.Parse()
+		alt.Audio = audio
+		alt.Image = image
+		alt.Text = alertText
+		alt.SubText = subText
+		alt.Type = alert.Type
+		go func(alert datastructures.SseEventTtsAlert) {
+			channelId, _ := primitive.ObjectIDFromHex(ctx.Config().TtsChannelID)
+			if err := ctx.GetTtsInstance().Generate(ctx, "", nil, channelId, parts.Voice{}, nil, 0, &alert); err != nil {
+				logrus.WithError(err).Error("failed to generate tts")
+			}
+			logrus.Info("generated tts")
+		}(alt)
 	})
 
 	go func() {

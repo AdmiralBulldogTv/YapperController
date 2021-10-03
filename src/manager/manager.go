@@ -7,7 +7,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/admiralbulldogtv/yappercontroller/src/alerts"
 	"github.com/admiralbulldogtv/yappercontroller/src/datastructures"
 	"github.com/admiralbulldogtv/yappercontroller/src/global"
 	"github.com/admiralbulldogtv/yappercontroller/src/server"
@@ -57,24 +56,6 @@ type Manager struct {
 	se streamelements.Client
 }
 
-type alertHelper struct {
-	Type string
-	Name string
-}
-
-func (a alertHelper) Parse() (string, string) {
-	switch a.Type {
-	case "cheer":
-		return alerts.CheerAlerts[a.Name+".gif"].ToName(), alerts.CheerAlerts[a.Name+".wav"].ToName()
-	case "donation":
-		return alerts.DonationAlerts[a.Name+".gif"].ToName(), alerts.DonationAlerts[a.Name+".wav"].ToName()
-	case "subscriber":
-		return alerts.SubscriberAlerts[a.Name+".gif"].ToName(), alerts.SubscriberAlerts[a.Name+".wav"].ToName()
-	default:
-		return "", ""
-	}
-}
-
 func (m *Manager) handleSe(gCtx global.Context) error {
 	ctx, cancel := global.WithTimeout(gCtx, time.Second*10)
 	defer cancel()
@@ -103,7 +84,7 @@ func (m *Manager) handleSe(gCtx global.Context) error {
 			case "unauthorized":
 				che <- fmt.Errorf("%s", event.Payload)
 			case "event:update", "event:test":
-				alert := alertHelper{}
+				alert := datastructures.AlertHelper{}
 				defaultVoice := textparser.VoicesMap["ann1"]
 				validVoices := []parts.Voice{
 					textparser.VoicesMap["ann1"],
@@ -265,21 +246,7 @@ func (m *Manager) handleSe(gCtx global.Context) error {
 
 					// ignore gifted subs.
 					if data.Gifted {
-						alert.Name = "SubscriberGift"
-						message = ""
-						alertText = fmt.Sprintf("~%s gifted a sub to ~%s", data.Sender, data.Name)
-					} else if data.BulkGifted {
-						alert.Name = "SubscriberGift"
-						if data.Amount >= 5 {
-							alert.Name = "SubscriberGift5"
-						}
-						if data.Amount >= 25 {
-							alert.Name = "SubscriberGift25"
-						}
-						if data.Amount >= 95 {
-							alert.Name = "SubscriberGift95"
-						}
-						alertText = fmt.Sprintf("~%s gifted ~%d subs", data.Sender, data.Amount)
+						return
 					} else {
 						alertText = fmt.Sprintf("~%s subscribed for ~%d months", data.Name, data.Amount)
 						defaultVoice = textparser.VoicesMap["trump"]
