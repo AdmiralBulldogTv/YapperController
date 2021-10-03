@@ -246,7 +246,7 @@ func (m *Manager) handleSe(gCtx global.Context) error {
 
 					// ignore gifted subs.
 					if data.Gifted {
-						return
+						continue event
 					} else {
 						alertText = fmt.Sprintf("~%s subscribed for ~%d months", data.Name, data.Amount)
 						defaultVoice = textparser.VoicesMap["trump"]
