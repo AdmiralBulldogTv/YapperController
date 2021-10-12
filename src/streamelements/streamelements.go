@@ -6,14 +6,14 @@ import (
 	"regexp"
 	"time"
 
-	"github.com/admiralbulldogtv/yappercontroller/src/utils"
 	"github.com/gorilla/websocket"
 	jsoniter "github.com/json-iterator/go"
+	"github.com/sirupsen/logrus"
 )
 
 var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
-var re = regexp.MustCompile(`^\d+\["([^"]+)",(.*)\]$`)
+var re = regexp.MustCompile(`^\d+(.*)$`)
 
 const (
 	EventListenerSubscription = "subscriber-latest"
@@ -158,21 +158,40 @@ func (c *cl) process() {
 		}
 
 		matches := re.FindAllSubmatch(data, -1)
+
 		if len(matches) == 0 {
-			if !c.connected && len(data) == 2 && data[0] == '4' && data[1] == '0' {
-				c.connected = true
-				c.events <- Event{
-					Name: "connect",
-				}
-			}
 			continue
 		}
 
 		match := matches[0]
 
+		if !c.connected && len(match[1]) == 2 && match[1][0] == '4' && match[1][1] == '0' {
+			c.connected = true
+			c.events <- Event{
+				Name: "connect",
+			}
+			continue
+		}
+
+		if len(match[2]) == 0 {
+			continue
+		}
+
+		parts := []jsoniter.RawMessage{}
+		if err := json.Unmarshal(match[2], parts); err != nil {
+			logrus.WithError(err).Error("failed to parse parts")
+			continue
+		}
+
+		name := ""
+		if err := jsoniter.Unmarshal(parts[1], &name); err != nil {
+			logrus.WithError(err).Error("failed to parse event name")
+			continue
+		}
+
 		c.events <- Event{
-			Name:    utils.B2S(match[1]),
-			Payload: match[2],
+			Name:    name,
+			Payload: parts[1],
 		}
 	}
 }
