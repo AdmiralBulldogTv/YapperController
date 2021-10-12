@@ -178,7 +178,7 @@ func (c *cl) process() {
 		}
 
 		parts := []jsoniter.RawMessage{}
-		if err := json.Unmarshal(match[2], parts); err != nil {
+		if err := json.Unmarshal(match[2], &parts); err != nil {
 			logrus.WithError(err).Error("failed to parse parts")
 			continue
 		}
