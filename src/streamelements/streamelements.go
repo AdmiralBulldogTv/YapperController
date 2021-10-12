@@ -13,7 +13,7 @@ import (
 
 var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
-var re = regexp.MustCompile(`^\d+(.*)$`)
+var re = regexp.MustCompile(`^(\d+)(.*)$`)
 
 const (
 	EventListenerSubscription = "subscriber-latest"
