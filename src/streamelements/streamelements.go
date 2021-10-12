@@ -184,7 +184,7 @@ func (c *cl) process() {
 		}
 
 		name := ""
-		if err := jsoniter.Unmarshal(parts[1], &name); err != nil {
+		if err := jsoniter.Unmarshal(parts[0], &name); err != nil {
 			logrus.WithError(err).Error("failed to parse event name")
 			continue
 		}
