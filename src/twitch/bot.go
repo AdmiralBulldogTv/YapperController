@@ -128,7 +128,7 @@ func NewClient(ctx global.Context) (Client, error) {
 
 	client.cl.OnPrivateMessage(func(message twitch.PrivateMessage) {
 		// ignore non control channel messages.
-		if !strings.EqualFold(message.Channel, ctx.Config().TwitchBotControlChannel) {
+		if !strings.EqualFold(message.Channel, ctx.Config().TwitchBotControlChannel) && !strings.EqualFold(message.Channel, ctx.Config().TwitchBotUsername) {
 			return
 		}
 
