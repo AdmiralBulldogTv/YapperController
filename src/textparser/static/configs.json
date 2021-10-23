@@ -253,7 +253,7 @@
     "taco_path": null,
     "fast_path": "./.models/arch/arch_fast_mel.pt",
     "onnx_path": "./.models/arch/arch_voc.onnx",
-    "cmudict_path": null
+    "cmudict_path": "./.models/cmudict/default"
   },
   {
     "speaker": "loli",
@@ -269,6 +269,6 @@
     "taco_path": null,
     "fast_path": "./.models/loli/loli_fast_mel.pt",
     "onnx_path": "./.models/loli/loli_voc.onnx",
-    "cmudict_path": null
+    "cmudict_path": "./.models/cmudict/default"
   }
 ]
