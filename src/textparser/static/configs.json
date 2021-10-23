@@ -265,7 +265,7 @@
     "pace": 0.7,
     "pitch_shift": -20,
     "p_arpabet": 1,
-    "volume": 8,
+    "volume": 7,
     "taco_path": null,
     "fast_path": "./.models/loli/loli_fast_mel.pt",
     "onnx_path": "./.models/loli/loli_voc.onnx",
