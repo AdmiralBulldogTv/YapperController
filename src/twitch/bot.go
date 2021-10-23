@@ -83,7 +83,7 @@ func NewClient(ctx global.Context) (Client, error) {
 	client := &twitchClient{}
 	client.cl = twitch.NewClient(ctx.Config().TwitchBotUsername, fmt.Sprintf("oauth:%s", token.AccessToken))
 
-	client.cl.Join(ctx.Config().TwitchBotControlChannel, ctx.Config().TwitchStreamerChannel)
+	client.cl.Join(ctx.Config().TwitchBotControlChannel, ctx.Config().TwitchStreamerChannel, ctx.Config().TwitchBotUsername)
 	client.cl.OnWhisperMessage(func(message twitch.WhisperMessage) {
 		found := false
 		for _, v := range ctx.Config().WhitelistedTwitchAccounts {

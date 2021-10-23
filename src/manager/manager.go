@@ -91,6 +91,8 @@ func (m *Manager) handleSe(gCtx global.Context) error {
 					textparser.VoicesMap["narr1"],
 					textparser.VoicesMap["narr2"],
 					textparser.VoicesMap["narr3"],
+					textparser.VoicesMap["arch"],
+					textparser.VoicesMap["loli"],
 				}
 
 				var evnt string
@@ -351,7 +353,6 @@ func (m *Manager) handleSe(gCtx global.Context) error {
 							alert.Name = "SubscriberMega"
 						}
 					}
-
 				default:
 					continue event
 				}

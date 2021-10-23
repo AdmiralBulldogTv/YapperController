@@ -43,6 +43,7 @@ type GenerateChangePayload struct {
 	Pace          float64 `json:"pace"`
 	PitchShift    int32   `json:"pitch_shift"`
 	PArpabet      float64 `json:"p_arpabet"`
+	Volume        float64 `json:"volume"`
 	TacoPath      string  `json:"taco_path"`
 	FastPath      string  `json:"fast_path"`
 	OnnxPath      string  `json:"onnx_path"`
@@ -200,6 +201,7 @@ func (inst *ttsInstance) SendRequest(ctx context.Context, text string, currentVo
 						Pace:          voice.Entry.Pace,
 						PitchShift:    voice.Entry.PitchShift,
 						PArpabet:      voice.Entry.PArpabet,
+						Volume:        voice.Entry.Volume,
 						TacoPath:      TacoPath,
 						FastPath:      FastPath,
 						OnnxPath:      *voice.Entry.OnnxPath,
