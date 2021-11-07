@@ -312,7 +312,7 @@ func (m *Manager) handleSe(gCtx global.Context) error {
 
 						if data.Amount >= 30 {
 							alert.Name = "Subscriber30"
-							validVoices = append(validVoices, textparser.VoicesMap["arch"], textparser.VoicesMap["loli"])
+							validVoices = append(validVoices, textparser.VoicesMap["arch"], textparser.VoicesMap["loli"], textparser.VoicesMap["gura"])
 						}
 
 						if data.Amount >= 35 {

@@ -31,6 +31,7 @@ type AudioConfig struct {
 	PitchShift    int32              `bson:"pitch_shift" json:"pitch_shift"`
 	PArpabet      float64            `bson:"p_arpabet" json:"p_arpabet"`
 	Volume        float64            `bson:"volume" json:"volume"`
+	Energy        bool               `bson:"energy" json:"energy"`
 	TacoPath      *string            `bson:"taco_path" json:"taco_path"`
 	FastPath      *string            `bson:"fast_path" json:"fast_path"`
 	OnnxPath      *string            `bson:"onnx_path" json:"onnx_path"`
