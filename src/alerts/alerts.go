@@ -52,10 +52,10 @@ var (
 		"SubscriberGift25.wav": 90,
 		"SubscriberGift95.wav": 100,
 		// Donation Volumes
-		"DonationDefault.wav": 40,
-		"Donation420.wav":     40,
-		"Donation10.wav":      16,
-		"Donation50.wav":      60,
+		"DonationDefault.wav": 80,
+		"Donation420.wav":     80,
+		"Donation10.wav":      40,
+		"Donation50.wav":      100,
 		// Cheer Volumes
 		"CheerDefault.wav": 64,
 		"Cheer1.wav":       64,
