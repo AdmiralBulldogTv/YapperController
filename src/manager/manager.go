@@ -366,12 +366,13 @@ func (m *Manager) handleSe(gCtx global.Context) error {
 				logrus.Infof("generating tts from request %s", evnt)
 				message = strings.TrimSpace(html.UnescapeString(message))
 				alt := datastructures.SseEventTtsAlert{}
-				image, audio := alert.Parse()
+				image, audio, volume := alert.Parse()
 				alt.Audio = audio
 				alt.Image = image
 				alt.Text = alertText
 				alt.SubText = strings.TrimSpace(html.UnescapeString(alertSubText))
 				alt.Type = alert.Type
+				alt.Volume = volume
 				go func(message string, alert datastructures.SseEventTtsAlert) {
 					channelId, _ := primitive.ObjectIDFromHex(gCtx.Config().TtsChannelID)
 					var id *primitive.ObjectID

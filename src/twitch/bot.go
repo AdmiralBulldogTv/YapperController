@@ -296,12 +296,13 @@ func NewClient(ctx global.Context) (Client, error) {
 		}
 
 		alt := datastructures.SseEventTtsAlert{}
-		image, audio := alert.Parse()
+		image, audio, volume := alert.Parse()
 		alt.Audio = audio
 		alt.Image = image
 		alt.Text = alertText
 		alt.SubText = subText
 		alt.Type = alert.Type
+		alt.Volume = volume
 		go func(alert datastructures.SseEventTtsAlert) {
 			channelId, _ := primitive.ObjectIDFromHex(ctx.Config().TtsChannelID)
 			if err := ctx.GetTtsInstance().Generate(ctx, "", nil, channelId, parts.Voice{}, nil, 0, &alert); err != nil {

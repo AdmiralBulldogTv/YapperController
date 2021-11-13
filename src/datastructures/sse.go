@@ -21,6 +21,7 @@ type SseEventTtsAlert struct {
 	Audio   string `json:"audio"`
 	Text    string `json:"text"`
 	SubText string `json:"sub_text"`
+	Volume  int    `json:"volume,omitempty"`
 }
 
 type SseEventTtsTranscription struct {
@@ -34,15 +35,15 @@ type AlertHelper struct {
 	Name string
 }
 
-func (a AlertHelper) Parse() (string, string) {
+func (a AlertHelper) Parse() (string, string, int) {
 	switch a.Type {
 	case "cheer":
-		return alerts.CheerAlerts[a.Name+".gif"].ToName(), alerts.CheerAlerts[a.Name+".wav"].ToName()
+		return alerts.CheerAlerts[a.Name+".gif"].ToName(), alerts.CheerAlerts[a.Name+".wav"].ToName(), alerts.CheerAlerts[a.Name+".wav"].Volume
 	case "donation":
-		return alerts.DonationAlerts[a.Name+".gif"].ToName(), alerts.DonationAlerts[a.Name+".wav"].ToName()
+		return alerts.DonationAlerts[a.Name+".gif"].ToName(), alerts.DonationAlerts[a.Name+".wav"].ToName(), alerts.DonationAlerts[a.Name+".wav"].Volume
 	case "subscriber":
-		return alerts.SubscriberAlerts[a.Name+".gif"].ToName(), alerts.SubscriberAlerts[a.Name+".wav"].ToName()
+		return alerts.SubscriberAlerts[a.Name+".gif"].ToName(), alerts.SubscriberAlerts[a.Name+".wav"].ToName(), alerts.SubscriberAlerts[a.Name+".wav"].Volume
 	default:
-		return "", ""
+		return "", "", 0
 	}
 }
