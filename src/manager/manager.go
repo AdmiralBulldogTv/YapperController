@@ -151,27 +151,34 @@ func (m *Manager) handleSe(gCtx global.Context) error {
 						textparser.VoicesMap["arno"],
 						textparser.VoicesMap["krab"],
 						textparser.VoicesMap["obama"],
+						// adding all voices at 300 bits because of bulldogs request.
+						textparser.VoicesMap["lac"],
+						textparser.VoicesMap["glad"],
+						textparser.VoicesMap["trump"],
+						textparser.VoicesMap["gabe"],
+						textparser.VoicesMap["rae"],
+						textparser.VoicesMap["pooh"],
 					)
 
 					if amount >= 5 {
 						alert.Name = "Cheer500"
 					}
 
-					if amount >= 6 {
-						validVoices = append(validVoices,
-							textparser.VoicesMap["lac"],
-							textparser.VoicesMap["glad"],
-							textparser.VoicesMap["trump"],
-							textparser.VoicesMap["gabe"],
-						)
-					}
+					// if amount >= 6 {
+					// 	validVoices = append(validVoices,
+					// 		textparser.VoicesMap["lac"],
+					// 		textparser.VoicesMap["glad"],
+					// 		textparser.VoicesMap["trump"],
+					// 		textparser.VoicesMap["gabe"],
+					// 	)
+					// }
 
 					if amount >= 10 {
-						defaultVoice = textparser.VoicesMap["pooh"]
-						validVoices = append(validVoices,
-							textparser.VoicesMap["rae"],
-							textparser.VoicesMap["pooh"],
-						)
+						// defaultVoice = textparser.VoicesMap["pooh"]
+						// validVoices = append(validVoices,
+						// textparser.VoicesMap["rae"],
+						// textparser.VoicesMap["pooh"],
+						// )
 
 						alert.Name = "Cheer1000"
 					}
@@ -203,6 +210,16 @@ func (m *Manager) handleSe(gCtx global.Context) error {
 						textparser.VoicesMap["arno"],
 						textparser.VoicesMap["krab"],
 						textparser.VoicesMap["obama"],
+						// adding all voices at 3 euro because of bulldogs request.
+						textparser.VoicesMap["lac"],
+						textparser.VoicesMap["glad"],
+						textparser.VoicesMap["gabe"],
+						textparser.VoicesMap["trump"],
+						textparser.VoicesMap["arch"],
+						textparser.VoicesMap["loli"],
+						textparser.VoicesMap["gura"],
+						textparser.VoicesMap["rae"],
+						textparser.VoicesMap["pooh"],
 					)
 
 					if data.Amount < 3 {
@@ -213,24 +230,24 @@ func (m *Manager) handleSe(gCtx global.Context) error {
 						alert.Name = "Donation420"
 					}
 
-					if data.Amount >= 6 {
-						validVoices = append(validVoices,
-							textparser.VoicesMap["lac"],
-							textparser.VoicesMap["glad"],
-							textparser.VoicesMap["gabe"],
-							textparser.VoicesMap["trump"],
-							textparser.VoicesMap["arch"],
-							textparser.VoicesMap["loli"],
-							textparser.VoicesMap["gura"],
-						)
-					}
+					// if data.Amount >= 6 {
+					// 	validVoices = append(validVoices,
+					// textparser.VoicesMap["lac"],
+					// textparser.VoicesMap["glad"],
+					// textparser.VoicesMap["gabe"],
+					// textparser.VoicesMap["trump"],
+					// textparser.VoicesMap["arch"],
+					// textparser.VoicesMap["loli"],
+					// textparser.VoicesMap["gura"],
+					// 	)
+					// }
 
 					if data.Amount >= 10 {
-						defaultVoice = textparser.VoicesMap["pooh"]
-						validVoices = append(validVoices,
-							textparser.VoicesMap["rae"],
-							textparser.VoicesMap["pooh"],
-						)
+						// defaultVoice = textparser.VoicesMap["pooh"]
+						// validVoices = append(validVoices,
+						// textparser.VoicesMap["rae"],
+						// textparser.VoicesMap["pooh"],
+						// )
 
 						alert.Name = "Donation10"
 					}
