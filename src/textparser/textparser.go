@@ -1,6 +1,8 @@
 package textparser
 
 import (
+	"fmt"
+	"regexp"
 	"strings"
 
 	"github.com/admiralbulldogtv/yappercontroller/src/datastructures"
@@ -12,6 +14,7 @@ import (
 	"github.com/admiralbulldogtv/yappercontroller/src/textparser/strip"
 	"github.com/admiralbulldogtv/yappercontroller/src/textparser/voice"
 	"github.com/admiralbulldogtv/yappercontroller/src/textparser/words"
+	"github.com/admiralbulldogtv/yappercontroller/src/utils"
 	"github.com/gobuffalo/packr/v2"
 	jsoniter "github.com/json-iterator/go"
 )
@@ -20,6 +23,10 @@ var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
 var Voices []parts.Voice
 var VoicesMap map[string]parts.Voice = map[string]parts.Voice{}
+
+var (
+	ErrBlacklisted = fmt.Errorf("blacklisted phrases")
+)
 
 func init() {
 	box := packr.New("textparser-static", "./static")
@@ -50,6 +57,11 @@ func init() {
 
 func Process(text string, currentVoice parts.Voice, validVoices []parts.Voice, maxVoiceSwaps int) ([]parts.VoicePart, error) {
 	text = strings.ToLower(text)
+	for _, re := range blacklisted {
+		if re.Match(utils.S2B(text)) {
+			return nil, ErrBlacklisted
+		}
+	}
 
 	stat := override.NormalizeOverride([]parts.VoicePart{{Type: parts.PartTypeRaw, Value: text}})
 	stat = voice.NormalizeVoices(stat, currentVoice, validVoices, maxVoiceSwaps)
@@ -62,4 +74,9 @@ func Process(text string, currentVoice parts.Voice, validVoices []parts.Voice, m
 	stat = strip.NormalizeCharacters(stat)
 
 	return stat, nil
+}
+
+var blacklisted = []*regexp.Regexp{
+	regexp.MustCompile(`\bgor(?:gc|p)_?s?\b`),
+	regexp.MustCompile(`\bknee\b`),
 }

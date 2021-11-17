@@ -403,9 +403,12 @@ func (m *Manager) handleSe(gCtx global.Context) error {
 						id = &idt
 					}
 					if err := gCtx.GetTtsInstance().Generate(gCtx, message, id, channelId, defaultVoice, validVoices, 5, &alert); err != nil {
-						logrus.WithError(err).Error("failed to generate tts")
+						if err != textparser.ErrBlacklisted {
+							logrus.WithError(err).Error("failed to generate tts")
+						}
+					} else {
+						logrus.Info("generated tts")
 					}
-					logrus.Info("generated tts")
 				}(message, alt)
 			}
 		}

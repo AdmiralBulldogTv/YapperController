@@ -102,6 +102,11 @@ func NewClient(ctx global.Context) (Client, error) {
 			msg = strings.TrimPrefix(msg, "!say ")
 			id := primitive.NewObjectIDFromTimestamp(time.Now())
 			if err := ctx.GetTtsInstance().Generate(ctx, msg, &id, channelID, textparser.Voices[0], textparser.Voices, 30, nil); err != nil {
+				if err == textparser.ErrBlacklisted {
+					err = multierror.Append(err, client.SendWhisper(message.User.Name, "failed to generate tts"))
+					logrus.WithError(err).Error("failed to generate tts")
+					return
+				}
 				err = multierror.Append(err, client.SendWhisper(message.User.Name, "failed to generate tts"))
 				logrus.WithError(err).Error("failed to generate tts")
 				return

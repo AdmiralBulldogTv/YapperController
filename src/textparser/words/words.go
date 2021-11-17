@@ -141,15 +141,17 @@ var wordMap = map[string]string{
 }
 
 var wordLetterMap = map[string]string{
-	"abc": "a b c",
-	"xyz": "x y z",
-	"bkb": "b k b",
-	"tb":  "t b",
-	"mkb": "m k b",
-	"fml": "f m l",
-	"idk": "i d k",
-	"og":  "o g",
-	"eg":  "e g",
-	"tts": "t t s",
-	"bf":  "b f",
+	"abc":  "a b c",
+	"xyz":  "x y z",
+	"bkb":  "b k b",
+	"tb":   "t b",
+	"mkb":  "m k b",
+	"fml":  "f m l",
+	"idk":  "i dont know",
+	"og":   "o g",
+	"eg":   "e g",
+	"tts":  "t t s",
+	"bf":   "b f",
+	"ccp":  "c c p",
+	"bttv": "b t t v",
 }

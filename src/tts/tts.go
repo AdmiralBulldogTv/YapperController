@@ -283,7 +283,7 @@ func (inst *ttsInstance) SendRequest(ctx context.Context, text string, currentVo
 	outPth := path.Join(tmpPath, "output.wav")
 
 	// add additional long pauses to allow chrome to play the audio correctly.
-	files = append(files, longPause, longPause, longPause, "-c", "2", "-r", "48000", outPth)
+	files = append(files, longPause, longPause, longPause, outPth)
 
 	if err = exec.CommandContext(ctx, "sox", files...).Run(); err != nil {
 		return nil, err
