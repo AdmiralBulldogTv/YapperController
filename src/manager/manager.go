@@ -151,13 +151,17 @@ func (m *Manager) handleSe(gCtx global.Context) error {
 						textparser.VoicesMap["arno"],
 						textparser.VoicesMap["krab"],
 						textparser.VoicesMap["obama"],
-						// adding all voices at 300 bits because of bulldogs request.
+						// adding all voices at 3 euro because of bulldogs request.
 						textparser.VoicesMap["lac"],
 						textparser.VoicesMap["glad"],
-						textparser.VoicesMap["trump"],
 						textparser.VoicesMap["gabe"],
+						textparser.VoicesMap["trump"],
+						textparser.VoicesMap["arch"],
+						textparser.VoicesMap["loli"],
+						textparser.VoicesMap["gura"],
 						textparser.VoicesMap["rae"],
 						textparser.VoicesMap["pooh"],
+						textparser.VoicesMap["doc"],
 					)
 
 					if amount >= 5 {
@@ -220,6 +224,7 @@ func (m *Manager) handleSe(gCtx global.Context) error {
 						textparser.VoicesMap["gura"],
 						textparser.VoicesMap["rae"],
 						textparser.VoicesMap["pooh"],
+						textparser.VoicesMap["doc"],
 					)
 
 					if data.Amount < 3 {
@@ -320,7 +325,7 @@ func (m *Manager) handleSe(gCtx global.Context) error {
 						}
 
 						if data.Amount >= 22 {
-							validVoices = append(validVoices, textparser.VoicesMap["glad"])
+							validVoices = append(validVoices, textparser.VoicesMap["glad"], textparser.VoicesMap["doc"])
 						}
 
 						if data.Amount >= 24 {
