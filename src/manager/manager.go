@@ -144,7 +144,7 @@ func (m *Manager) handleSe(gCtx global.Context) error {
 						continue event
 					}
 
-					defaultVoice = textparser.VoicesMap["doc"] // textparser.VoicesMap["bull"]
+					defaultVoice = textparser.VoicesMap["pooh"] // textparser.VoicesMap["bull"]
 
 					validVoices = append(validVoices,
 						textparser.VoicesMap["bull"],
@@ -207,7 +207,7 @@ func (m *Manager) handleSe(gCtx global.Context) error {
 					alert.Type = "donation"
 					alert.Name = "DonationDefault"
 
-					defaultVoice = textparser.VoicesMap["doc"] // textparser.VoicesMap["bull"]
+					defaultVoice = textparser.VoicesMap["pooh"] // textparser.VoicesMap["bull"]
 
 					validVoices = append(validVoices,
 						textparser.VoicesMap["bull"],
@@ -278,8 +278,8 @@ func (m *Manager) handleSe(gCtx global.Context) error {
 						continue event
 					} else {
 						alertText = fmt.Sprintf("~%s subscribed for ~%d months", data.Name, data.Amount)
-						defaultVoice = textparser.VoicesMap["doc"] // textparser.VoicesMap["trump"]
-						validVoices = append(validVoices, textparser.VoicesMap["bull"], textparser.VoicesMap["obama"], textparser.VoicesMap["trump"], textparser.VoicesMap["doc"])
+						defaultVoice = textparser.VoicesMap["pooh"] // textparser.VoicesMap["trump"]
+						validVoices = append(validVoices, textparser.VoicesMap["bull"], textparser.VoicesMap["obama"], textparser.VoicesMap["trump"], textparser.VoicesMap["pooh"])
 
 						// voice calculation
 						if data.Amount == 1 {
@@ -366,7 +366,7 @@ func (m *Manager) handleSe(gCtx global.Context) error {
 						}
 
 						if data.Amount >= 56 {
-							validVoices = append(validVoices, textparser.VoicesMap["pooh"])
+							validVoices = append(validVoices, textparser.VoicesMap["doc"])
 						}
 
 						if data.Amount >= 60 {
