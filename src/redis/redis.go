@@ -5,7 +5,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/admiralbulldogtv/yappercontroller/src/instances"
+	instance "github.com/admiralbulldogtv/yappercontroller/src/instances"
 	"github.com/go-redis/redis/v8"
 	"github.com/sirupsen/logrus"
 )
@@ -17,7 +17,7 @@ type redisInstance struct {
 	subsMtx sync.Mutex
 }
 
-func NewInstance(ctx context.Context, uri string) (instances.RedisInstance, error) {
+func NewInstance(ctx context.Context, uri string) (instance.Redis, error) {
 	opts, err := redis.ParseURL(uri)
 	if err != nil {
 		return nil, err

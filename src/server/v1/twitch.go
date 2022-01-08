@@ -44,8 +44,8 @@ func Twitch(ctx global.Context, app fiber.Router) {
 		}
 
 		q := url.Values{
-			"client_id":     []string{ctx.Config().TwitchClientID},
-			"redirect_uri":  []string{ctx.Config().TwitchRedirectURI},
+			"client_id":     []string{ctx.Config().Twitch.ClientID},
+			"redirect_uri":  []string{ctx.Config().Twitch.RedirectURI},
 			"response_type": []string{"code"},
 			"scope":         []string{strings.Join(scopes, " ")},
 			"state":         []string{token},
@@ -89,11 +89,11 @@ func Twitch(ctx global.Context, app fiber.Router) {
 
 		code := c.Query("code")
 		body, _ := json.Marshal(map[string]string{
-			"client_id":     ctx.Config().TwitchClientID,
-			"client_secret": ctx.Config().TwitchClientSecret,
+			"client_id":     ctx.Config().Twitch.ClientID,
+			"client_secret": ctx.Config().Twitch.ClientSecret,
 			"code":          code,
 			"grant_type":    "authorization_code",
-			"redirect_uri":  ctx.Config().TwitchRedirectURI,
+			"redirect_uri":  ctx.Config().Twitch.RedirectURI,
 		})
 		req, err := http.NewRequestWithContext(c.Context(), http.MethodPost, "https://id.twitch.tv/oauth2/token", bytes.NewBuffer(body))
 		if err != nil {
@@ -131,7 +131,7 @@ func Twitch(ctx global.Context, app fiber.Router) {
 			return c.SendStatus(500)
 		}
 
-		req.Header.Add("Client-Id", ctx.Config().TwitchClientID)
+		req.Header.Add("Client-Id", ctx.Config().Twitch.ClientID)
 		req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", tokenResp.AccessToken))
 
 		resp, err = http.DefaultClient.Do(req)
@@ -159,8 +159,8 @@ func Twitch(ctx global.Context, app fiber.Router) {
 		}
 
 		user := userResp.Data[0]
-		if user.ID == ctx.Config().TwitchBotID && len(tokenResp.Scope) != 0 {
-			redis := ctx.GetRedisInstance()
+		if user.ID == ctx.Config().Twitch.BotID && len(tokenResp.Scope) != 0 {
+			redis := ctx.Inst().Redis
 			data, _ = json.MarshalToString(tokenResp)
 			if err = redis.Set(c.Context(), fmt.Sprintf("twitch:bot:%s", user.ID), data, 0); err != nil {
 				logrus.WithError(err).Error("failed to fetch set bot token")

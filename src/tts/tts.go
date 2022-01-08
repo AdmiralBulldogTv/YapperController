@@ -12,7 +12,7 @@ import (
 
 	"github.com/admiralbulldogtv/yappercontroller/src/datastructures"
 	"github.com/admiralbulldogtv/yappercontroller/src/global"
-	"github.com/admiralbulldogtv/yappercontroller/src/instances"
+	instance "github.com/admiralbulldogtv/yappercontroller/src/instances"
 	"github.com/admiralbulldogtv/yappercontroller/src/textparser"
 	"github.com/admiralbulldogtv/yappercontroller/src/textparser/parts"
 	"github.com/admiralbulldogtv/yappercontroller/src/utils"
@@ -105,7 +105,7 @@ func init() {
 	}
 }
 
-func NewInstance(ctx global.Context, setKey, outputEvent string) (instances.TtsInstance, error) {
+func NewInstance(ctx global.Context, setKey, outputEvent string) (instance.TTS, error) {
 	inst := &ttsInstance{
 		gCtx:        ctx,
 		mp:          make(map[string]chan string),
@@ -121,7 +121,7 @@ func NewInstance(ctx global.Context, setKey, outputEvent string) (instances.TtsI
 
 func (inst *ttsInstance) process() {
 	ch := make(chan string)
-	inst.gCtx.GetRedisInstance().Subscribe(context.Background(), ch, inst.outputEvent)
+	inst.gCtx.Inst().Redis.Subscribe(context.Background(), ch, inst.outputEvent)
 	var (
 		resp Response
 		err  error
@@ -214,7 +214,7 @@ func (inst *ttsInstance) SendRequest(ctx context.Context, text string, currentVo
 
 				results[jid.String()] = rh
 				inst.cb[jid.String()] = cb
-				if err := inst.gCtx.GetRedisInstance().SAdd(ctx, inst.setKey, req); err != nil {
+				if err := inst.gCtx.Inst().Redis.SAdd(ctx, inst.setKey, req); err != nil {
 					return nil, err
 				}
 			}
@@ -298,7 +298,7 @@ func (inst *ttsInstance) Generate(ctx context.Context, text string, id *primitiv
 		if err != nil {
 			return err
 		}
-		if err := inst.gCtx.GetRedisInstance().Set(ctx, fmt.Sprintf("generated:tts:%s", id.Hex()), utils.B2S(data), time.Hour); err != nil {
+		if err := inst.gCtx.Inst().Redis.Set(ctx, fmt.Sprintf("generated:tts:%s", id.Hex()), utils.B2S(data), time.Hour); err != nil {
 			return err
 		}
 	}
@@ -314,7 +314,7 @@ func (inst *ttsInstance) Generate(ctx context.Context, text string, id *primitiv
 		if err != nil {
 			return err
 		}
-		if err = inst.gCtx.GetRedisInstance().Publish(ctx, fmt.Sprintf("overlay:events:%s", channelID.Hex()), event); err != nil {
+		if err = inst.gCtx.Inst().Redis.Publish(ctx, fmt.Sprintf("overlay:events:%s", channelID.Hex()), event); err != nil {
 			return err
 		}
 	}
@@ -323,9 +323,9 @@ func (inst *ttsInstance) Generate(ctx context.Context, text string, id *primitiv
 }
 
 func (inst *ttsInstance) Skip(ctx context.Context, channelID primitive.ObjectID) error {
-	return inst.gCtx.GetRedisInstance().Publish(ctx, fmt.Sprintf("overlay:events:%s", channelID.Hex()), `{"event":"skip"}`)
+	return inst.gCtx.Inst().Redis.Publish(ctx, fmt.Sprintf("overlay:events:%s", channelID.Hex()), `{"event":"skip"}`)
 }
 
 func (inst *ttsInstance) Reload(ctx context.Context, channelID primitive.ObjectID) error {
-	return inst.gCtx.GetRedisInstance().Publish(ctx, fmt.Sprintf("overlay:events:%s", channelID.Hex()), `{"event":"reload"}`)
+	return inst.gCtx.Inst().Redis.Publish(ctx, fmt.Sprintf("overlay:events:%s", channelID.Hex()), `{"event":"reload"}`)
 }

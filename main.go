@@ -13,27 +13,27 @@ import (
 )
 
 func main() {
-	ctx, cancel := global.WithCancel(configure.Init(context.Background()))
+	ctx, cancel := global.WithCancel(global.NewCtx(context.Background(), configure.New()))
 	defer cancel()
 
-	mongoInst, err := mongo.NewInstance(ctx, ctx.Config().MongoURI, ctx.Config().MongoDB)
+	mongoInst, err := mongo.NewInstance(ctx, ctx.Config().Mongo.URI, ctx.Config().Mongo.Database)
 	if err != nil {
 		logrus.WithError(err).Fatal("failed to start mongo")
 	}
 
-	redisInst, err := redis.NewInstance(ctx, ctx.Config().RedisURI)
+	redisInst, err := redis.NewInstance(ctx, ctx.Config().Redis.URI)
 	if err != nil {
 		logrus.WithError(err).Fatal("failed to start redis")
 	}
 
-	ttsInst, err := tts.NewInstance(ctx, ctx.Config().RedisTaskSetKey, ctx.Config().RedisOutputEvent)
+	ttsInst, err := tts.NewInstance(ctx, ctx.Config().Redis.TaskSetKey, ctx.Config().Redis.OutputEvent)
 	if err != nil {
 		logrus.WithError(err).Fatal("failed to start tts")
 	}
 
-	ctx.SetMongoInstance(mongoInst)
-	ctx.SetRedisInstance(redisInst)
-	ctx.SetTtsInstance(ttsInst)
+	ctx.Inst().Mongo = mongoInst
+	ctx.Inst().Redis = redisInst
+	ctx.Inst().TTS = ttsInst
 
 	done := manager.New(ctx)
 

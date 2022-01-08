@@ -19,7 +19,7 @@ func Wav(ctx global.Context) func(c *fiber.Ctx) error {
 			return c.SendStatus(404)
 		}
 
-		r := ctx.GetRedisInstance()
+		r := ctx.Inst().Redis
 		result, err := r.Get(ctx, fmt.Sprintf("generated:tts:%s", id.Hex()))
 		if err != nil {
 			if err == redis.Nil {

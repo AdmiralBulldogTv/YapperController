@@ -28,7 +28,7 @@ func New(ctx global.Context) <-chan struct{} {
 
 	manager := &Manager{}
 
-	if ctx.Config().StreamElementsEnabled {
+	if ctx.Config().StreamElements.Enabled {
 		manager.se = streamelements.NewClient()
 		if err := manager.handleSe(ctx); err != nil {
 			logrus.WithError(err).Fatal("streamelements failed")
@@ -70,7 +70,7 @@ func (m *Manager) handleSe(gCtx global.Context) error {
 			switch event.Name {
 			case "connect":
 				logrus.Info("streamelements connected")
-				if err := m.se.Auth(gCtx.Config().StreamElementsAuthMethod, gCtx.Config().StreamElementsAuthToken); err != nil {
+				if err := m.se.Auth(gCtx.Config().StreamElements.AuthMethod, gCtx.Config().StreamElements.AuthToken); err != nil {
 					panic(err)
 				}
 			case "disconnect":
@@ -402,7 +402,7 @@ func (m *Manager) handleSe(gCtx global.Context) error {
 						idt := primitive.NewObjectIDFromTimestamp(time.Now())
 						id = &idt
 					}
-					if err := gCtx.GetTtsInstance().Generate(gCtx, message, id, channelId, defaultVoice, validVoices, 5, &alert); err != nil {
+					if err := gCtx.Inst().TTS.Generate(gCtx, message, id, channelId, defaultVoice, validVoices, 5, &alert); err != nil {
 						if err != textparser.ErrBlacklisted {
 							logrus.WithError(err).Error("failed to generate tts")
 						}
@@ -414,7 +414,7 @@ func (m *Manager) handleSe(gCtx global.Context) error {
 		}
 	}()
 
-	if err := m.se.Connect(ctx.Config().StreamElementsWssUrl); err != nil {
+	if err := m.se.Connect(ctx.Config().StreamElements.WssURL); err != nil {
 		return err
 	}
 

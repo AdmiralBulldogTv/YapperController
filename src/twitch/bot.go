@@ -43,19 +43,19 @@ type twitchClient struct {
 }
 
 func NewClient(ctx global.Context) (Client, error) {
-	r := ctx.GetRedisInstance()
+	r := ctx.Inst().Redis
 	ch := make(chan string)
 	r.Subscribe(ctx, ch, "events:twitch:bot:login")
 
-	data, err := r.Get(ctx, fmt.Sprintf("twitch:bot:%s", ctx.Config().TwitchBotID))
+	data, err := r.Get(ctx, fmt.Sprintf("twitch:bot:%s", ctx.Config().Twitch.BotID))
 	if err != nil {
 		if err == redis.Nil {
 			for botID := range ch {
-				if botID == ctx.Config().TwitchBotID {
+				if botID == ctx.Config().Twitch.BotID {
 					break
 				}
 			}
-			data, err = r.Get(ctx, fmt.Sprintf("twitch:bot:%s", ctx.Config().TwitchBotID))
+			data, err = r.Get(ctx, fmt.Sprintf("twitch:bot:%s", ctx.Config().Twitch.BotID))
 			if err != nil {
 				return nil, err
 			}
@@ -75,18 +75,18 @@ func NewClient(ctx global.Context) (Client, error) {
 		}
 
 		data, _ = json.MarshalToString(token)
-		if err = r.Set(ctx, fmt.Sprintf("twitch:bot:%s", ctx.Config().TwitchBotID), data, 0); err != nil {
+		if err = r.Set(ctx, fmt.Sprintf("twitch:bot:%s", ctx.Config().Twitch.BotID), data, 0); err != nil {
 			return nil, err
 		}
 	}
 
 	client := &twitchClient{}
-	client.cl = twitch.NewClient(ctx.Config().TwitchBotUsername, fmt.Sprintf("oauth:%s", token.AccessToken))
+	client.cl = twitch.NewClient(ctx.Config().Twitch.BotUsername, fmt.Sprintf("oauth:%s", token.AccessToken))
 
-	client.cl.Join(ctx.Config().TwitchBotControlChannel, ctx.Config().TwitchStreamerChannel, ctx.Config().TwitchBotUsername)
+	client.cl.Join(ctx.Config().Twitch.BotControlChannel, ctx.Config().Twitch.StreamerChannel, ctx.Config().Twitch.BotUsername)
 	client.cl.OnWhisperMessage(func(message twitch.WhisperMessage) {
 		found := false
-		for _, v := range ctx.Config().WhitelistedTwitchAccounts {
+		for _, v := range ctx.Config().Twitch.WhitelistedAccounts {
 			if v == message.User.ID {
 				found = true
 				break
@@ -101,7 +101,7 @@ func NewClient(ctx global.Context) (Client, error) {
 		if strings.HasPrefix(msg, "!say ") {
 			msg = strings.TrimPrefix(msg, "!say ")
 			id := primitive.NewObjectIDFromTimestamp(time.Now())
-			if err := ctx.GetTtsInstance().Generate(ctx, msg, &id, channelID, textparser.Voices[0], textparser.Voices, 30, nil); err != nil {
+			if err := ctx.Inst().TTS.Generate(ctx, msg, &id, channelID, textparser.Voices[0], textparser.Voices, 30, nil); err != nil {
 				if err == textparser.ErrBlacklisted {
 					err = multierror.Append(err, client.SendWhisper(message.User.Name, "failed to generate tts"))
 					logrus.WithError(err).Error("failed to generate tts")
@@ -113,7 +113,7 @@ func NewClient(ctx global.Context) (Client, error) {
 			}
 			_ = client.SendWhisper(message.User.Name, "generated tts")
 		} else if msg == "!skip" {
-			err := ctx.GetTtsInstance().Skip(ctx, channelID)
+			err := ctx.Inst().TTS.Skip(ctx, channelID)
 			if err != nil {
 				err = multierror.Append(err, client.SendWhisper(message.User.Name, "failed to skip tts"))
 				logrus.WithError(err).Error("failed to skip tts")
@@ -121,7 +121,7 @@ func NewClient(ctx global.Context) (Client, error) {
 			}
 			_ = client.SendWhisper(message.User.Name, "skipped tts")
 		} else if msg == "!reload" {
-			err := ctx.GetTtsInstance().Reload(ctx, channelID)
+			err := ctx.Inst().TTS.Reload(ctx, channelID)
 			if err != nil {
 				_ = client.SendWhisper(message.User.Name, "failed to reload overlay")
 				logrus.WithError(err).Error("failed to reload overlay")
@@ -133,12 +133,12 @@ func NewClient(ctx global.Context) (Client, error) {
 
 	client.cl.OnPrivateMessage(func(message twitch.PrivateMessage) {
 		// ignore non control channel messages.
-		if !strings.EqualFold(message.Channel, ctx.Config().TwitchBotControlChannel) && !strings.EqualFold(message.Channel, ctx.Config().TwitchBotUsername) {
+		if !strings.EqualFold(message.Channel, ctx.Config().Twitch.BotControlChannel) && !strings.EqualFold(message.Channel, ctx.Config().Twitch.StreamerChannel) && !strings.EqualFold(message.Channel, ctx.Config().Twitch.BotUsername) {
 			return
 		}
 
 		found := false
-		for _, v := range ctx.Config().WhitelistedTwitchAccounts {
+		for _, v := range ctx.Config().Twitch.WhitelistedAccounts {
 			if v == message.User.ID {
 				found = true
 				break
@@ -153,14 +153,14 @@ func NewClient(ctx global.Context) (Client, error) {
 		if strings.HasPrefix(msg, "!say ") {
 			msg = strings.TrimPrefix(msg, "!say ")
 			id := primitive.NewObjectIDFromTimestamp(time.Now())
-			if err := ctx.GetTtsInstance().Generate(ctx, msg, &id, channelID, textparser.Voices[0], textparser.Voices, 30, nil); err != nil {
+			if err := ctx.Inst().TTS.Generate(ctx, msg, &id, channelID, textparser.Voices[0], textparser.Voices, 30, nil); err != nil {
 				err = multierror.Append(err, client.SendMessage(message.Channel, fmt.Sprintf("@%s, failed to generate tts", message.User.DisplayName)))
 				logrus.WithError(err).Error("failed to generate tts")
 				return
 			}
 			_ = client.SendMessage(message.Channel, fmt.Sprintf("@%s, generated tts", message.User.DisplayName))
 		} else if msg == "!skip" {
-			err := ctx.GetTtsInstance().Skip(ctx, channelID)
+			err := ctx.Inst().TTS.Skip(ctx, channelID)
 			if err != nil {
 				_ = client.SendMessage(message.Channel, fmt.Sprintf("@%s, failed to skip tts", message.User.DisplayName))
 				logrus.WithError(err).Error("failed to skip tts")
@@ -168,7 +168,7 @@ func NewClient(ctx global.Context) (Client, error) {
 			}
 			_ = client.SendMessage(message.Channel, fmt.Sprintf("@%s, skipped tts", message.User.DisplayName))
 		} else if msg == "!reload" {
-			err := ctx.GetTtsInstance().Reload(ctx, channelID)
+			err := ctx.Inst().TTS.Reload(ctx, channelID)
 			if err != nil {
 				_ = client.SendMessage(message.Channel, fmt.Sprintf("@%s, failed to reload overlay", message.User.DisplayName))
 				logrus.WithError(err).Error("failed to reload overlay")
@@ -310,7 +310,7 @@ func NewClient(ctx global.Context) (Client, error) {
 		alt.Volume = volume
 		go func(alert datastructures.SseEventTtsAlert) {
 			channelId, _ := primitive.ObjectIDFromHex(ctx.Config().TtsChannelID)
-			if err := ctx.GetTtsInstance().Generate(ctx, "", nil, channelId, parts.Voice{}, nil, 0, &alert); err != nil {
+			if err := ctx.Inst().TTS.Generate(ctx, "", nil, channelId, parts.Voice{}, nil, 0, &alert); err != nil {
 				logrus.WithError(err).Error("failed to generate tts")
 			}
 			logrus.Info("generated tts")
@@ -324,8 +324,8 @@ func NewClient(ctx global.Context) (Client, error) {
 			case <-ctx.Done():
 				return
 			case id := <-ch:
-				if id == ctx.Config().TwitchBotID {
-					data, err = r.Get(ctx, fmt.Sprintf("twitch:bot:%s", ctx.Config().TwitchBotID))
+				if id == ctx.Config().Twitch.BotID {
+					data, err = r.Get(ctx, fmt.Sprintf("twitch:bot:%s", ctx.Config().Twitch.BotID))
 					if err != nil {
 						logrus.WithError(err).Error("bad token from redis")
 						continue
@@ -374,8 +374,8 @@ func RefreshToken(ctx global.Context, refreshToken string) (TokenResp, error) {
 	body, err := json.Marshal(map[string]string{
 		"grant_type":    "refresh_token",
 		"refresh_token": refreshToken,
-		"client_id":     ctx.Config().TwitchClientID,
-		"client_secret": ctx.Config().TwitchClientSecret,
+		"client_id":     ctx.Config().Twitch.ClientID,
+		"client_secret": ctx.Config().Twitch.ClientSecret,
 	})
 	if err != nil {
 		return TokenResp{}, err

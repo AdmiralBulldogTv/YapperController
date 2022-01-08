@@ -17,8 +17,8 @@ func Health(ctx global.Context, app fiber.Router) {
 		"mongo": false,
 	}
 
-	redis := ctx.GetRedisInstance()
-	mongo := ctx.GetMongoInstance()
+	redis := ctx.Inst().Redis
+	mongo := ctx.Inst().Mongo
 
 	mtx := sync.Mutex{}
 	app.Get("/", func(c *fiber.Ctx) error {

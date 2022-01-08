@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/admiralbulldogtv/yappercontroller/src/datastructures"
-	"github.com/admiralbulldogtv/yappercontroller/src/instances"
+	instance "github.com/admiralbulldogtv/yappercontroller/src/instances"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -39,7 +39,7 @@ func (i *mongoInstance) FetchVoices(ctx context.Context) ([]datastructures.Audio
 	return vcs, err
 }
 
-func NewInstance(ctx context.Context, uri, db string) (instances.MongoInstance, error) {
+func NewInstance(ctx context.Context, uri, db string) (instance.Mongo, error) {
 	c, err := mongo.NewClient(options.Client().ApplyURI(uri))
 	if err != nil {
 		return nil, err

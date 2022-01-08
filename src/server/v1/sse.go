@@ -19,7 +19,7 @@ func SSE(ctx global.Context) func(c *fiber.Ctx) error {
 		if err != nil {
 			return c.SendStatus(401)
 		}
-		mgo := ctx.GetMongoInstance()
+		mgo := ctx.Inst().Mongo
 		overlay, err := mgo.FetchOverlay(c.Context(), tkn)
 		if err != nil {
 			if err == mongo.ErrNoDocuments {
@@ -34,7 +34,7 @@ func SSE(ctx global.Context) func(c *fiber.Ctx) error {
 		localCtx, cancel := context.WithCancel(context.Background())
 		subCh := make(chan string)
 
-		redis := ctx.GetRedisInstance()
+		redis := ctx.Inst().Redis
 		redis.Subscribe(localCtx, subCh, fmt.Sprintf("overlay:events:%s", overlay.ChannelID.Hex()))
 
 		go func() {
