@@ -47,7 +47,7 @@ func (c *gCtx) Inst() *Instance {
 }
 
 func NewCtx(ctx context.Context, config *configure.Config) Context {
-	return &gCtx{ctx: ctx, cfg: config}
+	return &gCtx{ctx: ctx, cfg: config, inst: &Instance{}}
 }
 
 func WithValue(ctx Context, key interface{}, value interface{}) Context {
