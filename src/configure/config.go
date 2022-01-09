@@ -83,46 +83,46 @@ func BindEnvs(config *viper.Viper, iface interface{}, parts ...string) {
 }
 
 type Config struct {
-	ConfigFile string `mapstructure:"config_file"`
-	Level      string `mapstructure:"level"`
+	ConfigFile string `mapstructure:"config_file" json:"config_file"`
+	Level      string `mapstructure:"level" json:"level"`
 
-	TtsChannelID string `mapstructure:"tts_channel_id"`
+	TtsChannelID string `mapstructure:"tts_channel_id" json:"tts_channel_id"`
 
 	Redis struct {
-		URI         string `mapstructure:"uri"`
-		TaskSetKey  string `mapstructure:"task_set_key"`
-		OutputEvent string `mapstructure:"output_event"`
-	} `mapstructure:"redis"`
+		URI         string `mapstructure:"uri" json:"uri"`
+		TaskSetKey  string `mapstructure:"task_set_key" json:"task_set_key"`
+		OutputEvent string `mapstructure:"output_event" json:"output_event"`
+	} `mapstructure:"redis" json:"redis"`
 
 	Mongo struct {
-		URI      string `mapstructure:"uri"`
-		Database string `mapstructure:"database"`
-	} `mapstructure:"mongo"`
+		URI      string `mapstructure:"uri" json:"uri"`
+		Database string `mapstructure:"database" json:"database"`
+	} `mapstructure:"mongo" json:"mongo"`
 
 	StreamElements struct {
-		Enabled    bool   `mapstructure:"enabled"`
-		WssURL     string `mapstructure:"wss_url"`
-		AuthToken  string `mapstructure:"auth_token"`
-		AuthMethod string `mapstructure:"auth_method"`
-	} `mapstructure:"streamelements"`
+		Enabled    bool   `mapstructure:"enabled" json:"enabled"`
+		WssURL     string `mapstructure:"wss_url" json:"wss_url"`
+		AuthToken  string `mapstructure:"auth_token" json:"auth_token"`
+		AuthMethod string `mapstructure:"auth_method" json:"auth_method"`
+	} `mapstructure:"streamelements" json:"streamelements"`
 
 	Twitch struct {
-		ClientID            string   `mapstructure:"client_id"`
-		ClientSecret        string   `mapstructure:"client_secret"`
-		RedirectURI         string   `mapstructure:"redirect_uri"`
-		BotID               string   `mapstructure:"bot_id"`
-		BotUsername         string   `mapstructure:"bot_username"`
-		BotControlChannel   string   `mapstructure:"bot_control_channel"`
-		StreamerChannel     string   `mapstructure:"streamer_channel"`
-		WhitelistedAccounts []string `mapstructure:"whitelisted_accounts"`
-	} `mapstructure:"twitch"`
+		ClientID            string   `mapstructure:"client_id" json:"client_id"`
+		ClientSecret        string   `mapstructure:"client_secret" json:"client_secret"`
+		RedirectURI         string   `mapstructure:"redirect_uri" json:"redirect_uri"`
+		BotID               string   `mapstructure:"bot_id" json:"bot_id"`
+		BotUsername         string   `mapstructure:"bot_username" json:"bot_username"`
+		BotControlChannel   string   `mapstructure:"bot_control_channel" json:"bot_control_channel"`
+		StreamerChannel     string   `mapstructure:"streamer_channel" json:"streamer_channel"`
+		WhitelistedAccounts []string `mapstructure:"whitelisted_accounts" json:"whitelisted_accounts"`
+	} `mapstructure:"twitch" json:"twitch"`
 
-	CookieDomain string   `mapstructure:"cookie_domain"`
-	CookieSecure bool     `mapstructure:"cookie_secure"`
-	Cors         []string `mapstructure:"cors"`
-	ApiBind      string   `mapstructure:"api_bind"`
+	CookieDomain string   `mapstructure:"cookie_domain" json:"cookie_domain"`
+	CookieSecure bool     `mapstructure:"cookie_secure" json:"cookie_secure"`
+	Cors         []string `mapstructure:"cors" json:"cors"`
+	ApiBind      string   `mapstructure:"api_bind" json:"api_bind"`
 
-	JwtSecret string `mapstructure:"jwt_secret"`
+	JwtSecret string `mapstructure:"jwt_secret" json:"jwt_secret"`
 
-	FrontendDomain string `mapstructure:"frontend_domain"`
+	FrontendDomain string `mapstructure:"frontend_domain" json:"frontend_domain"`
 }
