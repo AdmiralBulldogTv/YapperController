@@ -21,7 +21,14 @@ func main() {
 		logrus.WithError(err).Fatal("failed to start mongo")
 	}
 
-	redisInst, err := redis.NewInstance(ctx, ctx.Config().Redis.URI)
+	redisInst, err := redis.NewInstance(ctx, redis.SetupOptions{
+		Username:   ctx.Config().Redis.Username,
+		Password:   ctx.Config().Redis.Password,
+		MasterName: ctx.Config().Redis.MasterName,
+		Database:   ctx.Config().Redis.Database,
+		Addresses:  ctx.Config().Redis.Addresses,
+		Sentinel:   ctx.Config().Redis.Sentinel,
+	})
 	if err != nil {
 		logrus.WithError(err).Fatal("failed to start redis")
 	}

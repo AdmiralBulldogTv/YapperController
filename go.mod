@@ -6,14 +6,14 @@ require github.com/jdkato/prose/v2 v2.0.0
 
 require (
 	github.com/deckarep/golang-set v1.7.1 // indirect
-	github.com/go-redis/redis/v8 v8.11.3
+	github.com/go-redis/redis/v8 v8.11.4
 	github.com/mingrammer/commonregex v1.0.1 // indirect
 	gonum.org/v1/gonum v0.7.0 // indirect
 	gopkg.in/neurosnap/sentences.v1 v1.0.6 // indirect
 )
 
 require (
-	github.com/cespare/xxhash/v2 v2.1.1 // indirect
+	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
 	github.com/json-iterator/go v1.1.12
 )
@@ -47,7 +47,7 @@ require (
 	github.com/spf13/afero v1.6.0 // indirect
 	github.com/spf13/cast v1.3.1 // indirect
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
-	github.com/spf13/pflag v1.0.5 // indirect
+	github.com/spf13/pflag v1.0.5
 	github.com/subosito/gotenv v1.2.0 // indirect
 	go.mongodb.org/mongo-driver v1.7.2
 	golang.org/x/text v0.3.6 // indirect
@@ -71,7 +71,6 @@ require (
 )
 
 require (
-	github.com/davecgh/go-spew v1.1.1
 	github.com/gobuffalo/packr/v2 v2.8.1
 	github.com/hashicorp/errwrap v1.0.0 // indirect
 )

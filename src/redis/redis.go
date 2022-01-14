@@ -17,24 +17,52 @@ type redisInstance struct {
 	subsMtx sync.Mutex
 }
 
-func NewInstance(ctx context.Context, uri string) (instance.Redis, error) {
-	opts, err := redis.ParseURL(uri)
-	if err != nil {
-		return nil, err
+type SetupOptions struct {
+	Username   string
+	Password   string
+	MasterName string
+	Database   int
+
+	Addresses []string
+	Sentinel  bool
+}
+
+func NewInstance(ctx context.Context, opts SetupOptions) (instance.Redis, error) {
+	if len(opts.Addresses) == 0 {
+		logrus.Fatal("you must provide at least one redis address")
 	}
 
-	c := redis.NewClient(opts)
+	var rc *redis.Client
+
+	if opts.Sentinel {
+		rc = redis.NewFailoverClient(&redis.FailoverOptions{
+			MasterName:       opts.MasterName,
+			SentinelAddrs:    opts.Addresses,
+			SentinelUsername: opts.Username,
+			SentinelPassword: opts.Password,
+			Username:         opts.Username,
+			Password:         opts.Password,
+			DB:               opts.Database,
+		})
+	} else {
+		rc = redis.NewClient(&redis.Options{
+			Addr:     opts.Addresses[0],
+			Username: opts.Username,
+			Password: opts.Password,
+			DB:       opts.Database,
+		})
+	}
 
 	ctx, cancel := context.WithTimeout(ctx, time.Second*10)
 	defer cancel()
 
 	i := &redisInstance{
-		c:    c,
-		p:    c.Subscribe(ctx),
+		c:    rc,
+		p:    rc.Subscribe(ctx),
 		subs: make(map[string][]*redisSub),
 	}
 
-	if err = i.Ping(ctx); err != nil {
+	if err := i.Ping(ctx); err != nil {
 		_ = i.c.Close()
 		return nil, err
 	}

@@ -159,10 +159,10 @@ func Twitch(ctx global.Context, app fiber.Router) {
 		}
 
 		user := userResp.Data[0]
-		if user.ID == ctx.Config().Twitch.BotID && len(tokenResp.Scope) != 0 {
+		if user.ID == ctx.Config().Twitch.BotID {
 			redis := ctx.Inst().Redis
 			data, _ = json.MarshalToString(tokenResp)
-			if err = redis.Set(c.Context(), fmt.Sprintf("twitch:bot:%s", user.ID), data, 0); err != nil {
+			if err = redis.Set(c.Context(), fmt.Sprintf("twitch:bot:%s", user.ID), data, -1); err != nil {
 				logrus.WithError(err).Error("failed to fetch set bot token")
 				return c.SendStatus(500)
 			}

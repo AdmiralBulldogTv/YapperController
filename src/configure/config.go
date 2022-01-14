@@ -89,9 +89,14 @@ type Config struct {
 	TtsChannelID string `mapstructure:"tts_channel_id" json:"tts_channel_id"`
 
 	Redis struct {
-		URI         string `mapstructure:"uri" json:"uri"`
-		TaskSetKey  string `mapstructure:"task_set_key" json:"task_set_key"`
-		OutputEvent string `mapstructure:"output_event" json:"output_event"`
+		Username    string   `mapstructure:"username" json:"username"`
+		Password    string   `mapstructure:"password" json:"password"`
+		MasterName  string   `mapstructure:"master_name" json:"master_name"`
+		Addresses   []string `mapstructure:"addresses" json:"addresses"`
+		Database    int      `mapstructure:"database" json:"database"`
+		Sentinel    bool     `mapstructure:"sentinel" json:"sentinel"`
+		TaskSetKey  string   `mapstructure:"task_set_key" json:"task_set_key"`
+		OutputEvent string   `mapstructure:"output_event" json:"output_event"`
 	} `mapstructure:"redis" json:"redis"`
 
 	Mongo struct {
