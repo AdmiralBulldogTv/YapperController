@@ -160,7 +160,7 @@ func (m *Manager) handleSe(gCtx global.Context) error {
 						textparser.VoicesMap["gabe"],
 						textparser.VoicesMap["trump"],
 						textparser.VoicesMap["arch"],
-						textparser.VoicesMap["loli"],
+						// textparser.VoicesMap["loli"],
 						textparser.VoicesMap["gura"],
 						textparser.VoicesMap["rae"],
 						textparser.VoicesMap["pooh"],
@@ -223,7 +223,7 @@ func (m *Manager) handleSe(gCtx global.Context) error {
 						textparser.VoicesMap["gabe"],
 						textparser.VoicesMap["trump"],
 						textparser.VoicesMap["arch"],
-						textparser.VoicesMap["loli"],
+						// textparser.VoicesMap["loli"],
 						textparser.VoicesMap["gura"],
 						textparser.VoicesMap["rae"],
 						textparser.VoicesMap["pooh"],
@@ -337,7 +337,7 @@ func (m *Manager) handleSe(gCtx global.Context) error {
 
 						if data.Amount >= 30 {
 							alert.Name = "Subscriber30"
-							validVoices = append(validVoices, textparser.VoicesMap["arch"], textparser.VoicesMap["loli"], textparser.VoicesMap["gura"])
+							validVoices = append(validVoices, textparser.VoicesMap["arch"] /*textparser.VoicesMap["loli"],*/, textparser.VoicesMap["gura"])
 						}
 
 						if data.Amount >= 35 {
