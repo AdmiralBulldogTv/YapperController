@@ -91,6 +91,9 @@ func (m *Manager) handleSe(gCtx global.Context) error {
 					textparser.VoicesMap["narr1"],
 					textparser.VoicesMap["narr2"],
 					textparser.VoicesMap["narr3"],
+					textparser.VoicesMap["sepity"],
+					textparser.VoicesMap["steve"],
+					textparser.VoicesMap["billy"],
 				}
 
 				var evnt string
