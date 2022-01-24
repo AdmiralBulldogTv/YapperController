@@ -349,7 +349,7 @@
     "pace": 1.05,
     "pitch_shift": -5,
     "p_arpabet": 1,
-    "volume": 6,
+    "volume": 9,
     "taco_path": null,
     "energy": true,
     "fast_path": "./.models/billy/billy_fast_mel.pt",
