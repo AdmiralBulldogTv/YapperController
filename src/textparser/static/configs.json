@@ -366,7 +366,7 @@
     "pace": 1,
     "pitch_shift": 5,
     "p_arpabet": 1,
-    "volume": 60,
+    "volume": 15,
     "taco_path": null,
     "energy": true,
     "fast_path": "./.models/sepitys/sepitys_fast_mel.pt",
