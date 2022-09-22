@@ -91,8 +91,18 @@ func (m *Manager) handleSe(gCtx global.Context) error {
 					textparser.VoicesMap["narr1"],
 					textparser.VoicesMap["narr2"],
 					textparser.VoicesMap["narr3"],
+					textparser.VoicesMap["narr4"],
 					textparser.VoicesMap["kratos"],
 					textparser.VoicesMap["lamar"],
+					textparser.VoicesMap["george"],
+					textparser.VoicesMap["demon"],
+					textparser.VoicesMap["kkona"],
+					textparser.VoicesMap["beta"],
+					textparser.VoicesMap["melina"],
+					textparser.VoicesMap["vegeta"],
+					textparser.VoicesMap["raiden"],
+					textparser.VoicesMap["colonel"],
+					textparser.VoicesMap["widehardo"],
 				}
 
 				var evnt string
@@ -146,7 +156,7 @@ func (m *Manager) handleSe(gCtx global.Context) error {
 						continue event
 					}
 
-					defaultVoice = textparser.VoicesMap["arno"]
+					defaultVoice = textparser.VoicesMap["beta"]
 
 					validVoices = append(validVoices,
 						textparser.VoicesMap["bull"],
@@ -196,7 +206,7 @@ func (m *Manager) handleSe(gCtx global.Context) error {
 					alert.Type = "donation"
 					alert.Name = "DonationDefault"
 
-					defaultVoice = textparser.VoicesMap["arno"]
+					defaultVoice = textparser.VoicesMap["beta"]
 
 					validVoices = append(validVoices,
 						textparser.VoicesMap["bull"],
@@ -251,7 +261,12 @@ func (m *Manager) handleSe(gCtx global.Context) error {
 						continue event
 					} else {
 						alertText = fmt.Sprintf("~%s subscribed for ~%d months", data.Name, data.Amount)
-						defaultVoice = textparser.VoicesMap["arno"]
+						// because I promised I would do it to him
+						if data.Name == "pyra____" {
+							validVoices = append(validVoices, textparser.VoicesMap["gura"])
+							alertSubText = "gura: Hello chat I just want to remind you that I am the biggest weeb here. That is all and long live v tubers."
+						}
+						defaultVoice = textparser.VoicesMap["beta"]
 						validVoices = append(validVoices, textparser.VoicesMap["bull"], textparser.VoicesMap["obama"], textparser.VoicesMap["trump"], textparser.VoicesMap["pooh"], textparser.VoicesMap["arno"])
 
 						// voice calculation
