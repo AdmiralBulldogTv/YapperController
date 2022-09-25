@@ -414,7 +414,7 @@
     "gate_threshold": 0.1,
     "period": true,
     "start": 0,
-    "pace": 1.2,
+    "pace": 1.1,
     "pitch_shift": 0,
     "p_arpabet": 1,
     "volume": 9,
