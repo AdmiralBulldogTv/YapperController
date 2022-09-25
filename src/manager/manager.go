@@ -156,7 +156,7 @@ func (m *Manager) handleSe(gCtx global.Context) error {
 						continue event
 					}
 
-					defaultVoice = textparser.VoicesMap["beta"]
+					defaultVoice = textparser.VoicesMap["george"]
 
 					validVoices = append(validVoices,
 						textparser.VoicesMap["bull"],
@@ -206,7 +206,7 @@ func (m *Manager) handleSe(gCtx global.Context) error {
 					alert.Type = "donation"
 					alert.Name = "DonationDefault"
 
-					defaultVoice = textparser.VoicesMap["beta"]
+					defaultVoice = textparser.VoicesMap["george"]
 
 					validVoices = append(validVoices,
 						textparser.VoicesMap["bull"],
@@ -266,7 +266,7 @@ func (m *Manager) handleSe(gCtx global.Context) error {
 							validVoices = append(validVoices, textparser.VoicesMap["gura"])
 							alertSubText = "gura: Hello chat I just want to remind you that I am the biggest weeb here. That is all and long live v tubers."
 						}
-						defaultVoice = textparser.VoicesMap["beta"]
+						defaultVoice = textparser.VoicesMap["george"]
 						validVoices = append(validVoices, textparser.VoicesMap["bull"], textparser.VoicesMap["obama"], textparser.VoicesMap["trump"], textparser.VoicesMap["pooh"], textparser.VoicesMap["arno"])
 
 						// voice calculation
