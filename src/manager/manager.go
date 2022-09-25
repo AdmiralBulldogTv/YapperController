@@ -3,6 +3,7 @@ package manager
 import (
 	"fmt"
 	"html"
+	"math/rand"
 	"regexp"
 	"strings"
 	"time"
@@ -86,6 +87,14 @@ func (m *Manager) handleSe(gCtx global.Context) error {
 			case "event:update", "event:test":
 				alert := datastructures.AlertHelper{}
 				defaultVoice := textparser.VoicesMap["ann1"]
+				randomVoiceList := []string{
+					"widehardo",
+					"kkona",
+					"beta",
+					"george",
+					"melina",
+				}
+				defaultVoiceKey := randomVoiceList[rand.Intn(len(randomVoiceList))]
 				validVoices := []parts.Voice{
 					textparser.VoicesMap["ann1"],
 					textparser.VoicesMap["narr1"],
@@ -156,7 +165,7 @@ func (m *Manager) handleSe(gCtx global.Context) error {
 						continue event
 					}
 
-					defaultVoice = textparser.VoicesMap["george"]
+					defaultVoice = textparser.VoicesMap[defaultVoiceKey]
 
 					validVoices = append(validVoices,
 						textparser.VoicesMap["bull"],
@@ -206,7 +215,7 @@ func (m *Manager) handleSe(gCtx global.Context) error {
 					alert.Type = "donation"
 					alert.Name = "DonationDefault"
 
-					defaultVoice = textparser.VoicesMap["george"]
+					defaultVoice = textparser.VoicesMap[defaultVoiceKey]
 
 					validVoices = append(validVoices,
 						textparser.VoicesMap["bull"],
@@ -266,7 +275,7 @@ func (m *Manager) handleSe(gCtx global.Context) error {
 							validVoices = append(validVoices, textparser.VoicesMap["gura"])
 							alertSubText = "gura: Hello chat I just want to remind you that I am the biggest weeb here. That is all and long live v tubers."
 						}
-						defaultVoice = textparser.VoicesMap["george"]
+						defaultVoice = textparser.VoicesMap[defaultVoiceKey]
 						validVoices = append(validVoices, textparser.VoicesMap["bull"], textparser.VoicesMap["obama"], textparser.VoicesMap["trump"], textparser.VoicesMap["pooh"], textparser.VoicesMap["arno"])
 
 						// voice calculation
