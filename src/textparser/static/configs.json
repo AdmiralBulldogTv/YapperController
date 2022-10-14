@@ -621,7 +621,7 @@
     "pace": 1,
     "pitch_shift": 0,
     "p_arpabet": 1,
-    "volume": 9,
+    "volume": 8,
     "taco_path": null,
     "energy": true,
     "fast_path": "./.models/widow/widow_fast_mel.pt",
