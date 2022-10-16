@@ -88,14 +88,11 @@ func (m *Manager) handleSe(gCtx global.Context) error {
 				alert := datastructures.AlertHelper{}
 				defaultVoice := textparser.VoicesMap["ann1"]
 				randomVoiceList := []string{
-					//"widehardo",
-					//"kkona",
-					//"beta",
-					//"george",
-					//"melina",
-					"mei",
-					"tracer",
-					"widow",
+					"widehardo",
+					"kkona",
+					"beta",
+					"george",
+					"melina",
 				}
 				defaultVoiceKey := randomVoiceList[rand.Intn(len(randomVoiceList))]
 				validVoices := []parts.Voice{
