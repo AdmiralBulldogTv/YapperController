@@ -272,7 +272,7 @@ func (m *Manager) handleSe(gCtx global.Context) error {
 						// because I promised I would do it to him
 						if data.Name == "pyra____" {
 							validVoices = append(validVoices, textparser.VoicesMap["gura"])
-							alertSubText = "gura: Hello chat I just want to remind you that I am the biggest weeb here. That is all and long live v tubers."
+							alertSubText = "gura: Chat I am not the biggest weeb here, I am actually the furry dancing in the skyline video."
 							message = alertSubText
 						}
 						defaultVoice = textparser.VoicesMap[defaultVoiceKey]
