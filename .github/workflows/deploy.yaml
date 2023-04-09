@@ -37,6 +37,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
+          network: host
           tags: |
             harbor.komodohype.dev/troy/yapper-controller:${{ github.sha }}
             harbor.komodohype.dev/troy/yapper-controller:latest
